@@ -1,0 +1,27 @@
+### ### ### ### ### ### ### ### ### 
+### EXPERIMENTING WTIH NEW CODE ### 
+### ### ### ### ### ### ### ### ### 
+
+
+__version__ = "1.23.1"
+app_name = "Unity Agent GUI ʕ •ᴥ•ʔ"
+
+# BOILERPLATE
+from dotenv import load_dotenv
+import streamlit as st
+st.set_page_config(layout='wide', page_icon="🦦", page_title=f'{app_name} {__version__}')
+ss = st.session_state
+if 'debug' not in ss: ss['debug'] = {}
+header1 = st.empty() # for errors / messages
+header2 = st.empty() # for errors / messages
+header3 = st.empty() # for errors / messages
+
+# LAYOUT
+def main():
+    load_dotenv()
+    st.title("Unity Agent GUI")
+    st.write("Description here")
+    
+if __name__ == '__main__':
+    main()
+

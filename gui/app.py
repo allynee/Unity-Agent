@@ -19,8 +19,8 @@ header3 = st.empty() # for errors / messages
 # LAYOUT
 def main():
     load_dotenv()
-    st.title("Unity Agent GUI")
-    st.write("Description here")
+    st.title("Unity Agent GUI 🦦")
+    st.write("Head to the various pages to test different agents.")
     
 if __name__ == '__main__':
     main()

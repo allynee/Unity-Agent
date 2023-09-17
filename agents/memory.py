@@ -11,7 +11,6 @@ import utils as U
 
 class MemoryAgent:
     def __init__(self, model_name="gpt-3.5-turbo", temperature=0, resume=False, retrieve_top_k=3, ckpt_dir="ckpt"):
-        load_dotenv()
         load_dotenv(find_dotenv())
         openai.api_key = os.getenv("OPENAI_API_KEY")
         print("===============================")

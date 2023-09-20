@@ -41,7 +41,7 @@ class PlannerAgent:
         {{~/system}}
         {{#user~}}               
         Given a user instruction, identify the desired position or location specification.
-        Here is a list of possible locations: ["BackWall", "FrontWall", "LeftWall", "RightWall", "Floor", "Ceiling", "UserPosition"]
+        Here is a list of possible locations: ["BackWall", "FrontWall", "LeftWall", "RightWall", "Floor", "Ceiling"]
         The user query is {{user_query}}
         You must only return a list of strings, like ["LeftWall","RightWall"] for example.
         If no specific position is mentioned, return an empty list like [].        

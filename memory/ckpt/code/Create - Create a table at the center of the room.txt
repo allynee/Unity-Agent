@@ -1,0 +1,18 @@
+Instruction:
+Create a table at the center of the room
+
+Category:
+Create
+
+Code:
+private Object3D table;
+
+public void CreateTable()
+    	{
+		SceneAPI sceneAPI = GetSceneAPI();
+		Vector3D center = sceneAPI.GetSceneSize();
+		center.x /= 2;
+		center.y = 0;
+		center.z /= 2;
+		table = sceneAPI.CreateObject(\"Table\", \"Table\", center, new Vector3D(0, 0, 0));
+    	}

@@ -1,0 +1,31 @@
+Instruction:
+Position the Chair <5% * room's width> away from the Standing Lamp in the user's field of view.
+
+Category:
+Edit position
+
+Code:
+private Object3D standingLamp;
+
+public void PositionChair()
+	{
+		List<Object3D> objectsInView = sceneAPI.GetAllObject3DsInFieldOfView();
+		foreach (Object3D obj in objectsInView)
+		{
+			if (obj.GetType() == \"Standing Lamp\")
+			{
+				standingLamp = obj;
+				break;
+			}
+		}
+		if (standingLamp != null)
+		{
+			Vector3D lampPosition = standingLamp.GetPosition();
+			chair.SetPosition(new Vector3D(lampPosition.x + roomSize.x * 0.05f, 0, lampPosition.z));
+		}
+		else
+		{
+			// If no standing lamp is found in the user's field of view, the chair is positioned at the center of the room.
+			chair.SetPosition(new Vector3D(roomSize.x / 2, 0, roomSize.z / 2));
+		}
+	}

@@ -1,0 +1,20 @@
+Instruction:
+Edit the Size property of the Lamp to be 100 times its current size.
+
+Category:
+Edit size
+
+Code:
+public void ResizeLamp()
+            {
+                SceneAPI sceneAPI = GetSceneAPI();
+                Object3D lamp = sceneAPI.FindObject3DByName(\"Lamp\");
+                if(lamp != null)
+                {
+                        lamp.SetSizeByScale(100f);
+                }
+                else
+                {
+                        // Handle the case when the Lamp object is not found in the scene.
+                }
+            }

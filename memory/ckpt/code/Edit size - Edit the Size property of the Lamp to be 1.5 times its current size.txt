@@ -1,0 +1,23 @@
+Instruction:
+Edit the Size property of the Lamp to be 1.5 times its current size
+
+Category:
+Edit size
+
+Code:
+public void ResizeUserLamp()
+    	{
+		Object3D userLamp = GetSceneAPI().FindObject3DByName(\"UserLamp\");
+		if(userLamp != null)
+		{
+			Vector3D currentSize = userLamp.GetSize();
+			currentSize.x *= 1.5f;
+			currentSize.y *= 1.5f;
+			currentSize.z *= 1.5f;
+			userLamp.SetSize(currentSize);
+		}
+		else
+		{
+			// Handle the case where the UserLamp does not exist
+		}
+    	}

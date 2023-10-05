@@ -1,0 +1,24 @@
+Instruction:
+Interact with the Lamp using the Tap function to toggle its Illumination property.
+
+Category:
+Interact
+
+Code:
+public void ToggleLampIllumination()
+            {
+                SceneAPI sceneAPI = GetSceneAPI();
+                Object3D lamp = sceneAPI.FindObject3DByName(\"Lamp\");
+                if(lamp != null)
+                {
+                        lamp.WhenSelected((args) => 
+                        {
+                                bool isLit = lamp.IsLit();
+                                lamp.Illuminate(!isLit);
+                        });
+                }
+                else
+                {
+                        // Handle the case when the Lamp object is not found in the scene.
+                }
+            }

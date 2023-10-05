@@ -1,0 +1,7 @@
+Instruction:
+Edit the 'NewChair' object's Levitation property to true
+
+Category:
+Edit levitation
+
+Code:

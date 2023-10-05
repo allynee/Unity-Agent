@@ -1,0 +1,7 @@
+Instruction:
+Interact with the Ceiling LED Light (1) to turn it on.
+
+Category:
+Interact
+
+Code:

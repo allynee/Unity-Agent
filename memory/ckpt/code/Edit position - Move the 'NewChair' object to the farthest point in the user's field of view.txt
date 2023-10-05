@@ -1,0 +1,7 @@
+Instruction:
+Move the 'NewChair' object to the farthest point in the user's field of view
+
+Category:
+Edit position
+
+Code:

@@ -1,0 +1,11 @@
+Instruction:
+Edit the color of the Chair to pink, rgba(255,105,180,1)
+
+Category:
+Edit color
+
+Code:
+public void ChangeChairColor()
+	{
+		chair.SetColor(new Color3D(255/255f, 105/255f, 180/255f, 1));
+	}

@@ -6,32 +6,32 @@ sys.path.append("/Users/allyne/Documents/GitHub/Unity-Agent/")
 import agent as A
 
 def orchestrate(task):
-	planner = A.PlannerAgent()
+	planner = A.Planner()
 	output = planner._orchestrate(task)
 	st.write(output)
 
 def identify_task_type(task):
-	planner = A.PlannerAgent()
+	planner = A.Planner()
 	output = planner._identify_task_type(task)
 	st.write(output)
 
 def identify_prefab(task):
-    planner = A.PlannerAgent()
+    planner = A.Planner()
     output = planner._identify_prefab(task)
     st.write(output)
 
 def identify_location(task):
-	planner = A.PlannerAgent()
+	planner = A.Planner()
 	output = planner._identify_location(task)
 	st.write(output)
 
 def identify_create_object_operations(task):
-	planner = A.PlannerAgent()
+	planner = A.Planner()
 	output = planner._identify_create_object_operations(task)
 	st.write(output)
 
 def identify_modify_object_operations(task):
-	planner = A.PlannerAgent()
+	planner = A.Planner()
 	output = planner._identify_modify_object_operations(task)
 	st.write(output)
 

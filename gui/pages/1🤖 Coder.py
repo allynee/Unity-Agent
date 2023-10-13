@@ -6,12 +6,12 @@ sys.path.append("/Users/allyne/Documents/GitHub/Unity-Agent/")
 import agent as A
 
 def get_function(task, examples):
-	coder = A.CodeAgent()
+	coder = A.Coder()
 	output = coder._generate_function(task=task, examples=examples)
 	st.write(output)
 
 def get_script(task, plan, functions):
-	coder = A.CodeAgent()
+	coder = A.Coder()
 	output = coder._generate_script(task=task, plan=plan, functions=functions)
 	st.write(output)
 	print(output)

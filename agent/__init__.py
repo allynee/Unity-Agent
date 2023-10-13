@@ -1,3 +1,3 @@
-from .code import *
-from .memory import *
+from .coder import *
+from .memorymanager import *
 from .planner import *

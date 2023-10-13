@@ -3,7 +3,7 @@ from dotenv import load_dotenv, find_dotenv
 import os
 import openai
 
-class CodeAgent:
+class Coder:
     def __init__(self, model_name="gpt-3.5-turbo", temperature=0, resume=False, ckpt_dir="ckpt", execution_error=True):
         load_dotenv(find_dotenv())
         openai.api_key = os.getenv("OPENAI_API_KEY")

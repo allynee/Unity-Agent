@@ -12,7 +12,7 @@ def init_plan_memory(uploaded_file):
 	file_path = os.path.join(save_folder, file_name)
 	with open(file_path, "wb") as f:
 		f.write(uploaded_file.getbuffer())
-	memorymanager = A.MemoryAgent()
+	memorymanager = A.MemoryManager()
 	output = memorymanager._init_plan_memory(file_path)
 	st.write(output)
 
@@ -23,7 +23,7 @@ def init_code_memory(uploaded_file):
 	file_path = os.path.join(save_folder, file_name)
 	with open(file_path, "wb") as f:
 		f.write(uploaded_file.getbuffer())
-	memorymanager = A.MemoryAgent()
+	memorymanager = A.MemoryManager()
 	output = memorymanager._init_code_memory(file_path)
 	st.write(output)
 
@@ -37,12 +37,12 @@ def add_code(add):
 		"p_ideal":items[4],
 	}
 	st.write(info)
-	memorymanager = A.MemoryAgent()
+	memorymanager = A.MemoryManager()
 	output = memorymanager._add_new_code(info)
 	st.write(output)
 
 def get_code(instruction):
-	memorymanager = A.MemoryAgent()
+	memorymanager = A.MemoryManager()
 	code_list = memorymanager._get_code(instruction)
 	for i, c in enumerate(code_list):
 		st.markdown(f"### Retrieved Code {i+1}")
@@ -50,7 +50,7 @@ def get_code(instruction):
 		st.write("====================")
 
 def get_plan(user_query):
-	memorymanager = A.MemoryAgent()
+	memorymanager = A.MemoryManager()
 	plan_list = memorymanager._get_plan(user_query)
 	for i, p in enumerate(plan_list):
 		st.markdown(f"### Retrieved Plan {i+1}")
@@ -61,7 +61,7 @@ def delete_plan_memory():
 	folders_to_clear = ["../memory/ckpt/plans"]
 	files_to_clear = ["../init_memory/Plan.csv"]
 	delete_files_and_folders(files_to_clear, folders_to_clear)
-	memorymanager= A.MemoryAgent()
+	memorymanager= A.MemoryManager()
 	memorymanager._delete_plan_memory()
 	st.write("Plan memory cleared!")
 
@@ -69,7 +69,7 @@ def delete_code_memory():
 	folders_to_clear = ["../memory/ckpt/code"]
 	files_to_clear = ["../init_memory/Code.csv"]
 	delete_files_and_folders(files_to_clear, folders_to_clear)
-	memorymanager= A.MemoryAgent()
+	memorymanager= A.MemoryManager()
 	memorymanager._delete_code_memory()
 	st.write("Code memory cleared!")
 

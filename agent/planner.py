@@ -3,12 +3,16 @@ import guidance
 import openai
 import os
 
-class PlannerAgent:
+class Planner:
     def __init__(self, model_name="gpt-3.5-turbo", temperature=0, resume=False, ckpt_dir="ckpt"):
         load_dotenv(find_dotenv())
         openai.api_key = os.getenv("OPENAI_API_KEY")
         guidance.llm = guidance.llms.OpenAI(model_name, temperature=temperature)
         self.llm=guidance.llm
+
+    #TODO: Create plan function
+    def _generate_plan(self, user_query):
+        return ""
     
     def _orchestrate(self, user_query):
         task_type = self._identify_task_type(user_query)

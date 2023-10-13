@@ -1,8 +1,7 @@
 # Unity-Agent
 
 This is an individal WIP project for the module IS470 (Guided Research in Computing). 
-
-## IS470 Project: Lightweight Memory Management in Autonomous Code Agents
+The project topic is on lightweight Memory Management in Autonomous Code Agents
 
 ### About the project
 
@@ -12,10 +11,6 @@ This is an individal WIP project for the module IS470 (Guided Research in Comput
 - While LLMs like GPT-4 are capable of code generation, they face limitations in environments with limited or niche data (e.g., emerging languages, niche frameworks, and specialized tools).
 
 🧐 Research Goal: Exploring adaptive learning as an alternative approach
-- Explore and introduce a lightweight memory management system as an alternative to traditional methods.
-- Equip computational agents with the ability to store, retrieve, and apply insights from previous tasks.
-- Develop agents that progressively refine their programming strategies and code generation through experiential learning.
-- 
 - **Addressing Niche and Limited Data Challenges**: Develop a memory system that enables autonomous agents to work effectively in environments with constrained data.
 - **Memory-Based Learning**: Implement a lightweight memory management system that empowers agents to store and retrieve insights from past experiences and tasks.
 - **Enhanced Autonomy and Precision**: Enable the computational agents to autonomously refine and enhance their code generation strategies and outputs progressively.
@@ -28,12 +23,12 @@ This is an individal WIP project for the module IS470 (Guided Research in Comput
     **Example 1:** 
     - User command: “Put a button on the table”
     - Expected agent action: The agent manifests a button in the virtual space.
-    - ![Figure 1: The agent’s response to the command “Put a button on the table”.](/assets/example1.png)
+![Figure 1: The agent’s response to the command “Put a button on the table”.](/assets/example1.png)
   
     **Example 2:** 
     - User command: “When I press the button, make the table white”
     - Expected agent action: The table's color changes in real-time upon button press in the virtual space.
-    - ![Figure 2: Dynamic modification of virtual elements - making the table white upon pressing the button.](/assets/example2.png)
+![Figure 2: Dynamic modification of virtual elements - making the table white upon pressing the button.](/assets/example2.png)
 
 - The task faces challenges such as the acquisition of well-curated data due to the specialized and diverse nature of ubicomp spaces.
 - The research aims to bypass the need for extensive curated data, enabling the code agent to incrementally learn from the environment and human feedback, enhancing its capabilities in modifying the virtual environment.

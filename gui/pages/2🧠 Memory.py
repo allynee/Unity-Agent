@@ -1,8 +1,7 @@
 import streamlit as st
-from dotenv import load_dotenv
-from time import time as now
 import os
 import sys
+import shutil
 sys.path.append("/Users/allyne/Documents/GitHub/Unity-Agent/")
 import agent as A
 
@@ -58,6 +57,41 @@ def get_plan(user_query):
 		st.markdown(f"- User Query: {p['user_query']}\n\n- Plan: {p['plan']}")
 		st.write("====================")
 
+def delete_plan_memory():
+	folders_to_clear = ["../memory/ckpt/plans"]
+	files_to_clear = ["../init_memory/Plan.csv"]
+	delete_files_and_folders(files_to_clear, folders_to_clear)
+	memorymanager= A.MemoryAgent()
+	memorymanager._delete_plan_memory()
+	st.write("Plan memory cleared!")
+
+def delete_code_memory():
+	folders_to_clear = ["../memory/ckpt/code"]
+	files_to_clear = ["../init_memory/Code.csv"]
+	delete_files_and_folders(files_to_clear, folders_to_clear)
+	memorymanager= A.MemoryAgent()
+	memorymanager._delete_code_memory()
+	st.write("Code memory cleared!")
+
+def delete_files_and_folders(files_to_clear, folders_to_clear):
+	for file_path in files_to_clear:
+		try:
+			os.remove(file_path)
+			st.success(f"Deleted: {file_path}")
+		except FileNotFoundError:
+			st.warning(f"File Not Found: {file_path}")
+		except Exception as e:
+			st.error(f"Error: {str(e)}")
+
+	for folder in folders_to_clear:
+		try:
+			shutil.rmtree(folder)
+			st.success(f"Deleted all files in: {folder}")
+		except FileNotFoundError:
+			st.warning(f"Folder Not Found: {folder}")
+		except Exception as e:
+			st.error(f"Error: {str(e)}")
+
 st.title("Testing memory agent 🧠")
 
 st.write("1. Initialize memory on planning")
@@ -98,17 +132,14 @@ st.write("Yet to implement")
 st.write("6. Add new code to memory")
 st.write("Yet to implement")
 
-st.write("====Old stuff====")
-get = st.text_area(f"Get memory here:", key="get")
-if st.button("Run", key="runget"):
+st.write("7. Delete plan memory")
+if st.button("Delete", key="deleteplanbutton"):
 	with st.spinner("Processing"):
-		get_code(get)
+		delete_plan_memory()
 		st.success("Process done!")
 
-st.write("For this portion, please pass in a string consisting of user query, program code, category, compile, and ideal separated by ,")
-add = st.text_area(f"Add a task to the memory here", key="add")
-if st.button("Run", key="runadd"):
+st.write("8. Delete code memory")
+if st.button("Delete", key="deletecodebutton"):
 	with st.spinner("Processing"):
-		add_code(add)
+		delete_code_memory()
 		st.success("Process done!")
-		

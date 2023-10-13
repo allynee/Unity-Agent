@@ -28,7 +28,7 @@ class MemoryAgent:
         client = chromadb.Client(settings)
 
         self.embeddings = OpenAIEmbeddings()
-
+        self.client = client
         self.plansdb = client.get_or_create_collection(name="plansdb", embedding_function=self.embeddings)
         self.codedb = client.get_or_create_collection(name="codedb", embedding_function=self.embeddings)
     
@@ -142,52 +142,10 @@ class MemoryAgent:
         )
         return f"Added plan for user query \"{user_query}\""
     
-    #OLD CODE#
-
-    def _generate_program_name(self, program_description, program_code):
-        #TODO: Add example for generating descriptions
-        description_generator = guidance('''
-        {{#system~}}
-        You are a helpful assistant that generates a terse program name of for a piece of Unity C# code. 
-        {{~/system}}
-        {{#user~}}               
-        The program description is {{program_description}}
-        The code is {{program_code}}
-        {{~/user}}
-        {{#assistant~}}
-        {{gen "description" temperature=0}}
-        {{~/assistant}}
-        ''')
-        resp = description_generator(program_description=program_description, program_code=program_code)
-        return resp["description"]
-
-    def _add_new_strategy(self):
-        pass
-
-
-#get_code if following old vibes
-'''
-    def get_code(self, task):
-        task_embedding = OpenAIEmbeddings().embed_query(task)
-        k = min(self.vectordb._collection.count(), self.retrieve_top_k)
-        if k==0:
-            return []
-        print(f"Retrieving {k} code chunks")
-        code_chunks = self.vectordb.query(
-            query_embeddings=task_embedding,
-			n_results=k,
-			#where={"metadata_field": "is_equal_to_this"}, #TODO: Filtering by subtasks 
-            #where_document={"$contains":"search_string"}
-			include=["metadatas"]
-        )
-        return code_chunks["metadatas"][0] #TODO: Not sure if this syntax is correct
-'''
-
-#old instructions for generating prog description
-'''
-        1) Do not mention the function name.
-        2) There might be some helper functions before the main function, but you only need to describe the main function.
-        3) Try to summarize the function in no more than 6 sentences.
-        4) Your response should be a single line of text.
-        5) If the content is not related to unity, return "NA"
-'''
+    def _delete_plan_memory(self):
+        self.client.delete_collection(name="plansdb")
+        return "Deleted plan memory."
+    
+    def _delete_code_memory(self):
+        self.client.delete_collection(name="codedb")
+        return "Deleted code memory."

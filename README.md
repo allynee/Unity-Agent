@@ -1,9 +1,10 @@
 # Unity-Agent
 
 This is an individal WIP project for the module IS470 (Guided Research in Computing). 
-The project topic is on lightweight Memory Management in Autonomous Code Agents
 
 ### About the project
+
+🤖 Topic: Lightweight Memory Management in Autonomous Code Agents
 
 🎯 Limitations in Conventional Approaches
 - Emulating human coders through computational agents faces substantial challenges due to existing training methodologies.
@@ -22,12 +23,12 @@ The project topic is on lightweight Memory Management in Autonomous Code Agents
 
     **Example 1:** 
     - User command: “Put a button on the table”
-    - Expected agent action: The agent manifests a button in the virtual space.
+    - Expected agent action: Manifests a button in the virtual space.
 ![Figure 1: The agent’s response to the command “Put a button on the table”.](/assets/example1.png)
   
     **Example 2:** 
     - User command: “When I press the button, make the table white”
-    - Expected agent action: The table's color changes in real-time upon button press in the virtual space.
+    - Expected agent action: Modifies the table's properties such that its color changes in real-time upon pressing the button.
 ![Figure 2: Dynamic modification of virtual elements - making the table white upon pressing the button.](/assets/example2.png)
 
 - The task faces challenges such as the acquisition of well-curated data due to the specialized and diverse nature of ubicomp spaces.

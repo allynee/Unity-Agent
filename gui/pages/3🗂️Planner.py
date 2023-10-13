@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from time import time as now
 import sys
 sys.path.append("/Users/allyne/Documents/GitHub/Unity-Agent/")
-import agents as A
+import agent as A
 
 def orchestrate(task):
 	planner = A.PlannerAgent()

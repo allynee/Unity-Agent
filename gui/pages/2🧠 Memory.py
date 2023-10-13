@@ -4,7 +4,7 @@ from time import time as now
 import os
 import sys
 sys.path.append("/Users/allyne/Documents/GitHub/Unity-Agent/")
-import agents as A
+import agent as A
 
 def init_plan_memory(uploaded_file):
 	save_folder = "../init_memory"

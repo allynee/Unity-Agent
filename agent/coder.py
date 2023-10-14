@@ -118,7 +118,7 @@ class Coder:
 
         The task you have to create a function for is: {{task}}. 
                          
-        Here is an example of similar functions that worked:\n {{examples}}
+        Here are examples of similar functions which may or may not be applicable to your task:\n {{examples}}
         
         Your output should strictly follow the format below. Do NOT include any other information in your output.
         public void Method1()
@@ -132,7 +132,7 @@ class Coder:
         ''')
         resp = coder(task=task, examples=examples)
         return resp["function"]
-    
+         
     def _generate_script(self, task, plan, functions):
         guidance.llm = guidance.llms.OpenAI("gpt-3.5-turbo-16k")
         coder = guidance('''
@@ -182,7 +182,7 @@ class Coder:
         ```
         {{~/user}}
         {{#assistant~}}
-        {{gen "script" temperature=0 max_tokens=3200}}
+        {{gen "script" temperature=0 max_tokens=5000}}
         {{~/assistant}}
         ''')  
         resp = coder(task=task, plan=plan, functions=functions)

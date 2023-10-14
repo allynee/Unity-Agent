@@ -10,9 +10,63 @@ class Planner:
         guidance.llm = guidance.llms.OpenAI(model_name, temperature=temperature)
         self.llm=guidance.llm
 
-    #TODO: Create plan function
-    def _generate_plan(self, user_query):
-        return ""
+    #TODO: Create plan function. Separate each point with new line character \n
+    def _generate_plan(self, task, examples):
+        planner = guidance('''
+        {{#system~}}
+        You are an efficient, direct and helpful Assistant tasked with helping shape a ubicomp space. 
+        {{~/system}}
+        {{#user~}}
+        Based on the user's prompt, create a set of instruction in which each task is actionable and will result in a visible change noticeable by the user in the 3D ubicomp space/scene. 
+        For tasks that will create an interaction, the change would only be noticed by the user, when they trigger the interaction.
+        There are three Task Types and each step of the instruction must only use one of the following types.
+        1. Create: A new object is created/added to the scene. During this task, you may also indicate the starting position and rotation of the object.
+            1.1. Find the object type from the list, closest to the one requested by the user. If there are no objects remotely close to what the user asked, instructions should be set to null.
+            1.2. When writing the task, use the exact case-sensitive name.
+        2. Edit: An existing object's properties are changed. These properties can be one of the following: Position, Rotation, Size, Color, Illumination (Whether the object eminates light), Luminous Intensity (The brightness of the light between 1 and 10), Levitation (When an object is not levitated, it follows the rules of gravity, and when levitated, it floats).
+            2.1 Do not come up with your own numbers when editing the position, rotation, or size. You must always use relative numbers corresponding to the properties of the user, object(s), or scene. For example, if the user asks for an object to be placed close to the wall, instead of saying:
+            "Place the Lamp 10 cm away from the position of the left wall" 
+            say: 
+            "Place the Lamp <X% * room's width> away from the wall the user can see in their point of view" (where you would replace X by an appropriate number.)  
+            2.2 For colors, always use rgba amounts. 
+            2.3 When editing, always look at the value before change, and based on that value, make the edit. 
+        3. Interact: When a trigger event happens, object(s) are Edited. 
+            3.1 For touch and point triggers, there are already made functions that you may use.
+            3.2 For all other triggers, you must create a "void Update()" method and check for the trigger there. Make sure you always get values in the update, before triggering the event.
+
+
+        When creating the instruction, break the user prompt into actionable tasks that will be done by the order you put them in. Each task will:
+        - result in a visible change in the 3D scene.
+        - be one of three task types (Create, Edit, or Interact)
+        - give direct, actionable instruction without any explanations.
+        
+        The user instruction is {{task}}
+                           
+        Here are examples of similar functions which may or may not be applicable to your task:\n {{examples}}
+
+        Your output should strictly follow the format below. Do NOT include any other information in your output.
+        1. Instruction 1\n
+        2. Instruction 2\n
+        ...
+        
+        Final Notes:
+        a. Stick to coding conventions, avoiding GUI terms like 'drag' or 'click'.
+        b. Be precise in your instruction. Derive numbers from the room and objects unless specified the user.
+        c. Translate vague user terms (e.g., 'small') into value-based calculations based on the properties of the scene and objects.
+        d. Use specific math expressions for vague terms, e.g., instead of "close to the desk", use "smaller than <math expression based on room and object size>".
+        e. Adjust the orientation of objects placed on non-horizontal surfaces such as walls to fit that surface.
+        f. Every object can be illuminated, so you can use any of them as lights.
+        g. Your instruction should not be in a code format. These instruction should be easy to understand.
+        h. The instructions must be numbered and in each number only one action. 
+        h. You must not respond anything other than the JSON. Do not add any text to before or after the JSON.
+        i. If at any point the user mentions an object, and there are no objects remotely close to what they said in the list of current objects in the room given to you, you should make the instruction null and explain in the message.
+        {{~/user}}
+        {{#assistant~}}
+        {{gen "plan" max_tokens=1000 temperature=0}}
+        {{~/assistant}}
+        ''')
+        resp = planner(task=task, examples=examples)
+        return resp["plan"]
     
     def _orchestrate(self, user_query):
         task_type = self._identify_task_type(user_query)

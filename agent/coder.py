@@ -190,6 +190,6 @@ class Coder:
         {{~/assistant}}
         ''')  
         resp = coder(task=task, plan=plan, functions=functions)
-        using = "using UnityEngine;\nusing UnityEngine.Events;\nusing UnityEngine.XR.Interaction.Toolkit;\nusing System;\nusing System.Collections.Generic;\n\n"
+        using = "using UnityEngine;\nusing UnityEngine.Events;\nusing UnityEngine.XR.Interaction.Toolkit;\nusing System;\nusing System.Collections.Generic;\nusing Enums;\n\n"
         return using + resp["script"]
              

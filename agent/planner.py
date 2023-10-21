@@ -14,7 +14,7 @@ class Planner:
     def _generate_plan(self, task, examples):
         planner = guidance('''
         {{#system~}}
-        You are an efficient, direct and helpful Assistant tasked with helping shape a ubicomp space. 
+        You are an efficient, direct and helpful assistant tasked with helping shape a ubicomp space. 
         {{~/system}}
         {{#user~}}
         Based on the user's prompt, create a set of instruction in which each task is actionable and will result in a visible change noticeable by the user in the 3D ubicomp space/scene. 

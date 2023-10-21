@@ -5,6 +5,24 @@ import re
 import sys
 sys.path.append("/Users/allyne/Documents/GitHub/Unity-Agent/")
 import agent as A
+from pydantic import BaseModel, Field, validator, ConfigDict
+from typing import List, Optional
+
+class OutputCls:
+    def __init__(self, *, task:str, feedback: Optional[str] = None, plan: list[str], functions: list[str], script: str):
+        self.task = task
+        self.feedback = feedback
+        self.plan = plan
+        self.functions = functions
+        self.script = script
+
+class Output(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    task: str
+    feedback: Optional[str] = None
+    plan: list[str]
+    functions: list[str]
+    script: str
 
 def edit_code_string(code_string):
     try:
@@ -39,59 +57,73 @@ def create_and_download_cs_file(code_string):
     if btn:
         os.remove(file_name)
 
-def initialize_components():
-    planner = A.Planner()
-    coder = A.Coder()
-    memorymanager = A.MemoryManager()
-    # TODO: Critic
-    return planner, coder, memorymanager
 
 def generate_initial_script(task):
     st.write(f"- Received your task to generate a script for: {task}")
-    st.write("- Intializing components...")
-    planner, coder, memorymanager = initialize_components()
     st.write("- Retrieving similar plans...")
-    plan_examples = memorymanager._get_plan(task)
+    plan_examples = ss.memorymanager._get_plan(task)
     st.write("- Generating plan...")
-    plan = planner._generate_plan(task, plan_examples)
+    plan = ss.planner._generate_plan(task, plan_examples)
     st.write("Here is the generated plan!")
     plans = plan.split("\n")
     st.write(plans)
     functions = []
     st.write("Generating functions...")
     for plan in plans:
-        function_examples = memorymanager._get_code(plan)
-        functions.append(coder._generate_function(plan, function_examples))
+        function_examples = ss.memorymanager._get_code(plan)
+        functions.append(ss.coder._generate_function(plan, function_examples))
     st.write("Here are the generated functions!")
     st.write(functions)
     st.write("Generating script...")
-    script = coder._generate_script(task, plan, functions)
+    script = ss.coder._generate_script(task, plan, functions)
     st.write("Here is the generated script!")
     st.write(script)
     st.write("\n\nDownload the script here:")
     create_and_download_cs_file(script)
-    # TODO: Finish
+    ss.generated_output = OutputCls(
+        task=task,
+        plan=plans,
+        functions=functions,
+        script=script
+    )
+    st.write(ss.generated_output)
 
-def simulate_self_repair():
-    # Max 3 rounds
-    pass
+def refine_plan_pipeline(feedback):
+    ss.generated_output.feedback = feedback
+    st.write("Plan array")
+    st.write(ss.generated_output.plan)
+    index_list, new_steps = ss.critic._refine_plan(ss.generated_output)
+    st.write(index_list)
+    st.write(new_steps)
+    # ss.generated_output = ss.critic._refine_plan(ss.generated_output)
 
-def refine_code_pipeline():
-    pass
-
-def refine_strategy_pipeline():
-    pass
+def refine_code_pipeline(feedback):
+    ss.generated_output.feedback = feedback
+    ss.generated_output = ss.critic._refine_code(ss.generated_output)
+    #TODO: Undone
 
 def add_new_experience():
-    pass
-
-# TODO: May need to store a class of generated outputs to ensure learning can take place
+    ss.memorymanager._add_new_experience(ss.generated_output)
 
 st.title("Testing entire pipeline")
+ss = st.session_state
+if "generated_output" not in st.session_state:
+    ss.planner = A.Planner()
+    ss.coder = A.Coder()
+    ss.memorymanager = A.MemoryManager()
+    ss.critic = A.Critic()
+    ss.generated_output = None
 
 st.write("1. Generate initial script")
 task = st.text_area(f"Enter task here", key="task")
 if st.button("Run", key="generate_script"):
     with st.spinner("Processing"):
         generate_initial_script(task)
+        st.success("Process done!")
+
+st.write("2. Refine plan")
+feedback = st.text_area(f"Enter feedback here", key="feedback")
+if st.button("Run", key="refine_plan"):
+    with st.spinner("Processing"):
+        refine_plan_pipeline(feedback)
         st.success("Process done!")

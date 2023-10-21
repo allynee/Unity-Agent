@@ -52,7 +52,7 @@ class Planner:
         Final Notes:
         a. Stick to coding conventions, avoiding GUI terms like 'drag' or 'click'.
         b. Be precise in your instruction. Derive numbers from the room and objects unless specified the user.
-        c. Translate vague user terms (e.g., 'small') into value-based calculations based on the properties of the scene and objects.
+        c. Translate vague size terms like "big" or "small" into specific multipliers or measurements. For instance, "big" could translate to "2 times its current size", and "small" could translate to "0.5 times its current size", based on the properties of the scene and objects.
         d. Use specific math expressions for vague terms, e.g., instead of "close to the desk", use "smaller than <math expression based on room and object size>".
         e. Adjust the orientation of objects placed on non-horizontal surfaces such as walls to fit that surface.
         f. Every object can be illuminated, so you can use any of them as lights.
@@ -60,6 +60,7 @@ class Planner:
         h. The instructions must be numbered and in each number only one action. 
         h. You must not respond anything other than the JSON. Do not add any text to before or after the JSON.
         i. If at any point the user mentions an object, and there are no objects remotely close to what they said in the list of current objects in the room given to you, you should make the instruction null and explain in the message.
+        j. When referring to changes in properties, always provide specific multipliers or measurements based on the properties of the scene and objects. Avoid vague terms without accompanying tangible values.
         {{~/user}}
         {{#assistant~}}
         {{gen "plan" max_tokens=1000 temperature=0}}

@@ -1,7 +1,6 @@
 User Query,Plan
-Turn on all the ceiling lights,"1. Interact with the Ceiling LED Light to turn it on. 
-2. Interact with the Ceiling LED Light (1) to turn it on. 
-3. Interact with the Ceiling LED Light (2) to turn it on. 
-4. Interact with the Ceiling LED Light (3) to turn it on. 
-5. Interact with the Ceiling LED Light (4) to turn it on. 
-6. Interact with the Ceiling LED Light (5) to turn it on."
+Create a big table,"1. Create a new object of type Table
+2. Edit the Size property of the Table to be 1.5 times of its current size"
+Create a red lamp on the table,"1. Create a new object of type Lamp
+2. Edit the Position property of the Lamp to be on the table
+3. Edit the Color of the Lamp to red rgba(255, 0, 0, 1)."

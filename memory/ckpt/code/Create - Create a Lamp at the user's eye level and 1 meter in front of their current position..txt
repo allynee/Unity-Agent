@@ -1,8 +1,0 @@
-Instruction:
-Create a Lamp at the user's eye level and 1 meter in front of their current position.
-
-Category:
-Create
-
-Code:
-Don't have?? (4 btw)

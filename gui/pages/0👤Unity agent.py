@@ -1,6 +1,7 @@
 import base64
 import streamlit as st
 import os
+import re
 import sys
 sys.path.append("/Users/allyne/Documents/GitHub/Unity-Agent/")
 import agent as A
@@ -13,9 +14,17 @@ def edit_code_string(code_string):
     except ValueError:
         st.write("Invalid code: 'using' or '}' not found.")
 
+def get_class_name_from_code(code_string):
+    # Extract the class name from the code string using regex
+    match = re.search(r'public class (\w+)', code_string)
+    if match:
+        return match.group(1)
+    return "generated_script" 
+
 def create_and_download_cs_file(code_string):
     code_string = edit_code_string(code_string)
-    file_name = "generated_script.cs"
+    class_name = get_class_name_from_code(code_string)
+    file_name = f"{class_name}.cs"
     with open(file_name, "w", encoding="utf-8") as file:
         file.write(code_string)
     

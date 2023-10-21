@@ -14,7 +14,6 @@ class Coder:
         #TODO: May need to account for resume, or not.
         #TODO: May need to account for execution error, or not
 
-
     def _generate_function(self, task, examples): 
         coder = guidance('''
         {{#system~}}
@@ -26,6 +25,8 @@ class Coder:
         - Object3D: Each object in the space is of this type, and the methods here are available for every object. The anchor for the position and rotation of each object is at the bottom center of the object. 
         - Vector3D: Any 3-dimentional dataset uses this class to represent x, y, and z.
         - Color3D: Color information using rgba.
+        
+        **As the script's class inherits from `SceneAPI`, you can directly call its methods without prefixing.**
 
         Use the provided system to manipulate the room.
         You must adhere strictly to standard C# methods. 
@@ -33,7 +34,8 @@ class Coder:
         
         Follow these steps:
         1. Create a "public void methodName()" method in your class that corresponds to the action with an appropriate name. The method may NOT accept or return any arguments and should result in a visible change in the 3d ubicomp space.
-        2. Write a C# code that implements the task. You may use and create private fields and methods to achieve this. Stay within the boundaries of the given instructions, avoiding Unity-specific methods and extraneous code. To access the SceneAPI methods, use GetSceneAPI()
+        2. Write a C# code that implements the task. You may use and create private fields and methods to achieve this. Stay within the boundaries of the given instructions, avoiding Unity-specific methods and extraneous code. 
+        3. Include Debug.Log statements at relevant steps to log the actions being taken, especially before and after any operations, and in case of errors or checks. This helps in tracking the flow and status of the function during runtime.
         
         Here are all the classes and functions you may use in your code:
         ```
@@ -147,7 +149,7 @@ class Coder:
         Function Templates: {{functions}}
         
         Pay close attention to the following guidelines:
-        - Formulate a "public class [classname] : SolutionClass" where '[classname]' should represent the user's task context.
+        - Formulate a "public class [classname] : SceneAPI" where '[classname]' should represent the user's task context.
         - Utilize supplied function templates for actionable tasks.
         - Allow slight modifications to function templates to maintain logical coherence, and integrate necessary private members or methods.
         - Abide by standard C# methods and conventions, ensuring you do not use Unity-specific or unrelated external methods.
@@ -156,19 +158,21 @@ class Coder:
         - If an object is created or modified in one method, ensure that subsequent methods act on the same object instead of creating new ones.
         - If a method depends on the result of another, ensure the ordering and parameterization of method calls adhere to logical and functional consistency.
         - Leverage class-level variables to maintain state and object references across multiple method calls.
+        - Include Debug.Log statements at relevant steps to log the actions being taken, especially before and after any operations, and in case of errors or checks. This helps in tracking the flow and status of the function during runtime.
         
         Your output should strictly follow the format below. Do NOT include any other information in your output.
         ```
-        using UnityEngine;
-        using UnityEngine.Events;
-        using UnityEngine.XR.Interaction.Toolkit;
-        using System;
-        using System.Collections.Generic;
-                         
-        public class YourChosenClassName : SolutionClass 
+        public class YourChosenClassName : SceneAPI
         {	
-                // Add any needed class members here
+            // Add any needed class members here
             
+            private void Start()
+                {
+                    Method1();
+                    Method2();
+                    // And so on... The number of methods will depend on the user's request.
+                }
+
             public void Method1()
                 {
                     // Insert the method code here
@@ -186,5 +190,6 @@ class Coder:
         {{~/assistant}}
         ''')  
         resp = coder(task=task, plan=plan, functions=functions)
-        return resp["script"]
+        using = "using UnityEngine;\nusing UnityEngine.Events;\nusing UnityEngine.XR.Interaction.Toolkit;\nusing System;\nusing System.Collections.Generic;\n\n"
+        return using + resp["script"]
              

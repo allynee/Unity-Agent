@@ -1,8 +1,0 @@
-Instruction:
-Create a Lamp at the center of the room at a height equivalent to the average height of the tables in the room.
-
-Category:
-Create
-
-Code:
-Don't have?? (4 btw)

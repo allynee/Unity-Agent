@@ -1,0 +1,8 @@
+Instruction:
+Edit the Position property of the Lamp to be on the table
+
+Category:
+Edit position
+
+Code:
+public void EditLampPosition(){}

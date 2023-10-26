@@ -5,6 +5,18 @@ import sys
 sys.path.append("/Users/allyne/Documents/GitHub/Unity-Agent/")
 import agent as A
 
+def get_three_plans(task):
+	planner= A.Planner()
+	memory_manager = A.MemoryManager()
+	examples = memory_manager._get_plan(task)
+	st.write("Previous plans:\n", examples)
+	output_1 = planner._generate_plan(task, examples)
+	output_2 = planner._generate_plan(task, examples)
+	output_3 = planner._generate_plan(task, [])
+	st.write("Output 1 is:\n\n ", output_1)
+	st.write("Output 2 is: \n\n", output_2)
+	st.write("Output 3 is: \n\n", output_3)
+
 def orchestrate(task):
 	planner = A.Planner()
 	output = planner._orchestrate(task)
@@ -43,51 +55,61 @@ def identify_modify_object_operations(task):
 
 st.title("Testing planning agent")
 
-st.write("1. Identify task type")
-task3 = st.text_area(f"Identify task type from task here", key="task3")
-if st.button("Run", key="run1"):
+st.write("Generate 3 plans")
+task = st.text_area(f"Enter task here", key="task")
+if st.button("Run", key="run"):
 	with st.spinner("Processing"):
-		identify_task_type(task3)
+		get_three_plans(task)
 		st.success("Process done!")
 
-st.write("2. Identify prefab to be created, modified, or deleted.")
-st.write('All prefabs avail are: ["Chair", "TableLamp", "Table", "Screen", "Push Button"]')
-task = st.text_area(f"Identify prefab from task here", key="task")
-if st.button("Run", key="run2"):
-	with st.spinner("Processing"):
-		identify_prefab(task)
-		st.success("Process done!")
 
-st.write("3. Identify creation operations")
-task5= st.text_area(f"Identify creation operations from task here", key="task5")
-if st.button("Run", key="run5"):
-	with st.spinner("Processing"):
-		st.write("Location, orientation, size, color")
-		identify_create_object_operations(task5)
-		st.success("Process done!")
+# st.write("=====Old=====")
 
-st.write("4. Identify modification operations")
-task4 = st.text_area(f"Identify modification operations from task here", key="task4")
-if st.button("Run", key="run4"):
-	with st.spinner("Processing"):
-		st.write("Location, orientation, size, color")
-		identify_modify_object_operations(task4)
-		st.success("Process done!")
+# st.write("1. Identify task type")
+# task3 = st.text_area(f"Identify task type from task here", key="task3")
+# if st.button("Run", key="run1"):
+# 	with st.spinner("Processing"):
+# 		identify_task_type(task3)
+# 		st.success("Process done!")
 
-st.write("5. Identify location specification")
-st.write('Possible locations are: ["BackWall", "FrontWall", "LeftWall", "RightWall", "Floor", "Ceiling"]')
-task2 = st.text_area(f"Identify location specification from task here", key="task2")
-if st.button("Run", key="run3"):
-	with st.spinner("Processing"):
-		identify_location(task2)
-		st.success("Process done!")
+# st.write("2. Identify prefab to be created, modified, or deleted.")
+# st.write('All prefabs avail are: ["Chair", "TableLamp", "Table", "Screen", "Push Button"]')
+# task = st.text_area(f"Identify prefab from task here", key="task")
+# if st.button("Run", key="run2"):
+# 	with st.spinner("Processing"):
+# 		identify_prefab(task)
+# 		st.success("Process done!")
 
-st.write("6. Orchestrate")
-task1 = st.text_area(f"Create entire plan here", key="task1")
-if st.button("Run", key="run6"):
-	with st.spinner("Processing"):
-		orchestrate(task1)
-		st.success("Process done!")
+# st.write("3. Identify creation operations")
+# task5= st.text_area(f"Identify creation operations from task here", key="task5")
+# if st.button("Run", key="run5"):
+# 	with st.spinner("Processing"):
+# 		st.write("Location, orientation, size, color")
+# 		identify_create_object_operations(task5)
+# 		st.success("Process done!")
+
+# st.write("4. Identify modification operations")
+# task4 = st.text_area(f"Identify modification operations from task here", key="task4")
+# if st.button("Run", key="run4"):
+# 	with st.spinner("Processing"):
+# 		st.write("Location, orientation, size, color")
+# 		identify_modify_object_operations(task4)
+# 		st.success("Process done!")
+
+# st.write("5. Identify location specification")
+# st.write('Possible locations are: ["BackWall", "FrontWall", "LeftWall", "RightWall", "Floor", "Ceiling"]')
+# task2 = st.text_area(f"Identify location specification from task here", key="task2")
+# if st.button("Run", key="run3"):
+# 	with st.spinner("Processing"):
+# 		identify_location(task2)
+# 		st.success("Process done!")
+
+# st.write("6. Orchestrate")
+# task1 = st.text_area(f"Create entire plan here", key="task1")
+# if st.button("Run", key="run6"):
+# 	with st.spinner("Processing"):
+# 		orchestrate(task1)
+# 		st.success("Process done!")
 
 # st.write("3. Identify number of elements")
 # task3 = st.text_area(f"Identify number of elements from task here", key="task3")

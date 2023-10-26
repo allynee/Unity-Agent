@@ -4,7 +4,7 @@ import openai
 import os
 
 class Planner:
-    def __init__(self, model_name="gpt-3.5-turbo", temperature=0, resume=False, ckpt_dir="ckpt"):
+    def __init__(self, model_name="gpt-3.5-turbo", temperature=1.0, resume=False, ckpt_dir="ckpt"):
         load_dotenv(find_dotenv())
         openai.api_key = os.getenv("OPENAI_API_KEY")
         guidance.llm = guidance.llms.OpenAI(model_name, temperature=temperature)

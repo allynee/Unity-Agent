@@ -57,7 +57,6 @@ def create_and_download_cs_file(code_string):
     if btn:
         os.remove(file_name)
 
-
 def generate_initial_script(task):
     st.write(f"- Received your task to generate a script for: {task}")
     st.write("- Retrieving similar plans...")

@@ -2,5 +2,5 @@ User query:
 Create a chair in front of every wall
 
 Plan:
-1. Create four “Chair” objects at the user’s feet position 
- 2. Position each chair 0.5 meters in front of each room wall
+1. Create four new objects of type "Chair"
+2. Edit the Position property of each chair to be 0.5 meters in front of each room wall

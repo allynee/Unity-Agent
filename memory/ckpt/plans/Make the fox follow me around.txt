@@ -2,7 +2,8 @@ User query:
 Make the fox follow me around
 
 Plan:
-1. Find a “Fox” object in the scene
- 2. Initialize a NavMeshAgent and Animator component for the fox, setting the fox's NavMeshAgent speed to default 2.0 units/s, angular speed to 120 degrees/s, and acceleration to 8 units/s_.
- 3. Continuously rotate the fox to face the user 
- 4. Continuously update the fox's destination to a point 0.5 meters in front of the user's current orientation. If the fox is more than 0.7 meters away from this point, it should start walking towards it.
+1. Find a “Fox” object in the scene. If there are no "Fox" objects found, create a new object of type "Fox"
+2. Initialize a NavMeshAgent and Animator component for the Fox
+3. Set the Fox's NavMeshAgent's speed to default 2.0 units/s, angular speed to 120 degrees/s, and acceleration to 8.0 units/s^2
+4. Continuously edit the Rotation property of the Fox to face the user 
+5. Continuously check if the Fox is more than 1.5 meters away from the user with a Boolean variable. If true, update the Fox's NavMeshAgent's destination to a point 0.5 meters in front of the user's current orientation

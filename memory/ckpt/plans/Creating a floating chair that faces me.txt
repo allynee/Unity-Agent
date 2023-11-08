@@ -2,7 +2,8 @@ User query:
 Creating a floating chair that faces me
 
 Plan:
-1. Create a “Chair” object at the user's feet position.
- 2. Position the chair to a default 2 meters in front of the user. 
- 3. Set the chair to levitate 1.5 meters above its current ground position.
- 4. Rotate the chair to face the user, correcting for an initial right-facing orientation of the chair by rotating it to face the user's head position.
+1. Create a new object of type “Chair”.
+2. Edit the Position property of the Chair to a default 2 meters in front of the user. 
+3. Edit the Levitation property of the Chair to true.
+4. Edit the Position property of the Chair to 1.5 meters above its current position. 
+5. Edit the Rotation property the chair to face the user, correcting for an initial right-facing orientation of the chair by rotating it to face the user's head position.

@@ -1,23 +1,25 @@
 User Query,Plan
-Create a big table,"1. Create a new object of type Table
- 2. Edit the Size property of the Table to be 1.5 times of its current size"
-Create a red lamp on the table,"1. Create a new object of type Lamp
- 2. Edit the Position property of the Lamp to be on the table
- 3. Edit the Color of the Lamp to red rgba(255, 0, 0, 1)."
-Create a chair in front of every wall,"1. Create four “Chair” objects at the user’s feet position 
- 2. Position each chair 0.5 meters in front of each room wall"
-Place a big blue lamp on the table,"1. Create a “Lamp” object at the user’s feet position 
- 2. If a table is in view, position the lamp at the center on top of the table
- 3. Change the lamp’s color to blue with RGBA(0, 0, 1, 1)
- 4. Enlarge the lamp to be 120% of its original size"
-Make the fox follow me around,"1. Find a “Fox” object in the scene
- 2. Initialize a NavMeshAgent and Animator component for the fox, setting the fox's NavMeshAgent speed to default 2.0 units/s, angular speed to 120 degrees/s, and acceleration to 8 units/s_.
- 3. Continuously rotate the fox to face the user 
- 4. Continuously update the fox's destination to a point 0.5 meters in front of the user's current orientation. If the fox is more than 0.7 meters away from this point, it should start walking towards it."
-Create a circle of glowing lights on the wall,"1. Create a 10 “LED Cube” objects at the user’s feet position
- 2. Position all the LED cubes to form a circle on the wall in front of the user 
- 3. Update the Illumination of all the LED cubes to change every 10s"
-Creating a floating chair that faces me,"1. Create a “Chair” object at the user's feet position.
- 2. Position the chair to a default 2 meters in front of the user. 
- 3. Set the chair to levitate 1.5 meters above its current ground position.
- 4. Rotate the chair to face the user, correcting for an initial right-facing orientation of the chair by rotating it to face the user's head position."
+Create a big table,"1. Create a new object of type ""Table""
+2. Edit the Size property of the Table to be 1.5 times of its current size"
+Create a red lamp on the table,"1. Create a new object of type ""Lamp""
+2. Edit the Color property of the Lamp to red with rgba(255, 0, 0, 1)
+3. If a table is in view, edit the Position property of the Lamp at the center on top of the table"
+Create a chair in front of every wall,"1. Create four new objects of type ""Chair""
+2. Edit the Position property of each chair to be 0.5 meters in front of each room wall"
+Place a big blue lamp on the table,"1. Create a new object of type “Lamp” 
+2. Edit the Color property of the lamp to blue with RGBA(0, 0, 1, 1)
+3. If a table is in view, edit the Position property of the Lamp at the center on top of the table
+4. Edit the Size property of the lamp to be 1.2 times of its original size"
+Make the fox follow me around,"1. Find a “Fox” object in the scene. If there are no ""Fox"" objects found, create a new object of type ""Fox""
+2. Initialize a NavMeshAgent and Animator component for the Fox
+3. Set the Fox's NavMeshAgent's speed to default 2.0 units/s, angular speed to 120 degrees/s, and acceleration to 8.0 units/s^2
+4. Continuously edit the Rotation property of the Fox to face the user 
+5. Continuously check if the Fox is more than 1.5 meters away from the user with a Boolean variable. If true, update the Fox's NavMeshAgent's destination to a point 0.5 meters in front of the user's current orientation"
+Create a circle of glowing lights on the wall,"1. Create ten new objects of type “LED Cube” 
+2. Edit the Position property of the array of LED cubes so they form a circle on the wall in front of the user 
+3. Edit the Illumination property of the array of LED cubes to change every 2 seconds."
+Creating a floating chair that faces me,"1. Create a new object of type “Chair”.
+2. Edit the Position property of the Chair to a default 2 meters in front of the user. 
+3. Edit the Levitation property of the Chair to true.
+4. Edit the Position property of the Chair to 1.5 meters above its current position. 
+5. Edit the Rotation property the chair to face the user, correcting for an initial right-facing orientation of the chair by rotating it to face the user's head position."

@@ -42,7 +42,7 @@ def get_class_name_from_code(code_string):
 def create_and_download_cs_file(code_string):
     code_string = edit_code_string(code_string)
     class_name = get_class_name_from_code(code_string)
-    file_name = f"{class_name}.cs"
+    file_name = f"generated_scripts/{class_name}.cs"
     with open(file_name, "w", encoding="utf-8") as file:
         file.write(code_string)
     

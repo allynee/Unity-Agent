@@ -2,7 +2,7 @@ User query:
 Place a big blue lamp on the table
 
 Plan:
-1. Create a “Lamp” object at the user’s feet position 
- 2. If a table is in view, position the lamp at the center on top of the table
- 3. Change the lamp’s color to blue with RGBA(0, 0, 1, 1)
- 4. Enlarge the lamp to be 120% of its original size
+1. Create a new object of type “Lamp” 
+2. Edit the Color property of the lamp to blue with RGBA(0, 0, 1, 1)
+3. If a table is in view, edit the Position property of the Lamp at the center on top of the table
+4. Edit the Size property of the lamp to be 1.2 times of its original size

@@ -2,6 +2,6 @@ User query:
 Create a red lamp on the table
 
 Plan:
-1. Create a new object of type Lamp
- 2. Edit the Position property of the Lamp to be on the table
- 3. Edit the Color of the Lamp to red rgba(255, 0, 0, 1).
+1. Create a new object of type "Lamp"
+2. Edit the Color property of the Lamp to red with rgba(255, 0, 0, 1)
+3. If a table is in view, edit the Position property of the Lamp at the center on top of the table

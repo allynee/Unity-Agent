@@ -6,13 +6,13 @@ import guidance
 from langchain.embeddings import OpenAIEmbeddings
 import os
 import openai
+import my_utils as U
 from time import time as now
 import sys
 sys.path.append("/Users/allyne/Documents/GitHub/Unity-Agent/")
-import utils as U
 
 class MemoryManager:
-    def __init__(self, model_name="gpt-3.5-turbo", temperature=0, resume=False, retrieve_top_k=3, ckpt_dir="ckpt"):
+    def __init__(self, model_name="gpt-3.5-turbo-1106", temperature=0, resume=False, retrieve_top_k=3, ckpt_dir="ckpt"):
         load_dotenv(find_dotenv())
         openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -25,6 +25,7 @@ class MemoryManager:
         #TODO: May need to account for resume, or not. Not sure if need mkdir thingy too
         settings = Settings(chroma_db_impl="duckdb+parquet",
                                      persist_directory=f"../memory/{ckpt_dir}")
+        print(f"Initializing memory in {settings.persist_directory}...")
         client = chromadb.Client(settings)
 
         self.embeddings = OpenAIEmbeddings()

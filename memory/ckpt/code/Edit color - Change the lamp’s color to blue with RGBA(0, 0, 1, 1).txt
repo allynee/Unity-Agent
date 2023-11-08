@@ -1,0 +1,19 @@
+Instruction:
+Change the lamp’s color to blue with RGBA(0, 0, 1, 1)
+
+Category:
+Edit color
+
+Code:
+public void ChangeLampColorToBlue()
+  {
+  if (lamp != null)
+  {
+  // Set the color of the lamp to blue
+  lamp.SetColor(new Color3D(0, 0, 1, 1)); // RGB for blue color
+  }
+  else
+  {
+  Debug.LogError("Lamp doesn't exist. Create it first before changing its color.");
+  }
+  }

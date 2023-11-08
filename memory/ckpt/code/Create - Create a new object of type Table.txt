@@ -6,11 +6,11 @@ Create
 
 Code:
 public void CreateTable()
-    {
-        // Spawn table at the user's feet
-        Vector3D userFeetPosition = GetUsersFeetPosition();
-        
-        // Create the table
-        userTable = CreateObject("UserTable", "Table", userFeetPosition, new Vector3D(0, 0, 0));
-        
-    }
+  {
+  // Spawn table at the user's feet
+  Vector3D userFeetPosition = GetUsersFeetPosition();
+  
+  // Create the table
+  userTable = CreateObject("UserTable", "Table", userFeetPosition, new Vector3D(0, 0, 0));
+  
+  }

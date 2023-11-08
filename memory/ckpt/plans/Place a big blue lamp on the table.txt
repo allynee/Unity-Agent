@@ -1,0 +1,8 @@
+User query:
+Place a big blue lamp on the table
+
+Plan:
+1. Create a “Lamp” object at the user’s feet position 
+ 2. If a table is in view, position the lamp at the center on top of the table
+ 3. Change the lamp’s color to blue with RGBA(0, 0, 1, 1)
+ 4. Enlarge the lamp to be 120% of its original size

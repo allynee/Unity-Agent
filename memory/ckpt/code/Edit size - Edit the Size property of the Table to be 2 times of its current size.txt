@@ -6,31 +6,35 @@ Edit size
 
 Code:
 public void EditTableSize()
-{
-    Debug.Log("Attempting to find and edit the size of the table.");
+ {
+  Debug.Log("Attempting to find and edit the size of the table.");
+ 
 
-    Object3D table = FindObject3DByName("Table");
-    if (table != null)
-    {
-        Debug.Log("Table found. Retrieving its current size.");
-        
-        Vector3D currentSize = table.GetSize();
+  Object3D table = FindObject3DByName("Table");
+  if (table != null)
+  {
+  Debug.Log("Table found. Retrieving its current size.");
+  
+  Vector3D currentSize = table.GetSize();
+ 
 
-        Debug.Log($"Current table size: X={currentSize.x}, Y={currentSize.y}, Z={currentSize.z}");
+  Debug.Log($"Current table size: X={currentSize.x}, Y={currentSize.y}, Z={currentSize.z}");
+ 
 
-        currentSize.x *= 2.0f;
-        currentSize.y *= 2.0f;
-        currentSize.z *= 2.0f;
+  currentSize.x *= 2.0f;
+  currentSize.y *= 2.0f;
+  currentSize.z *= 2.0f;
+ 
 
-        Debug.Log($"Setting new table size: X={currentSize.x}, Y={currentSize.y}, Z={currentSize.z}");
-        
-        table.SetSize(currentSize);
-        Debug.Log("Table size successfully updated.");
-    }
-    else
-    {
-        Debug.Log("Error: Table not found in the scene.");
-        // Handle the case where the table does not exist
-        // For instance, you might choose to create the table here or notify the user.
-    }
-}
+  Debug.Log($"Setting new table size: X={currentSize.x}, Y={currentSize.y}, Z={currentSize.z}");
+  
+  table.SetSize(currentSize);
+  Debug.Log("Table size successfully updated.");
+  }
+  else
+  {
+  Debug.Log("Error: Table not found in the scene.");
+  // Handle the case where the table does not exist
+  // For instance, you might choose to create the table here or notify the user.
+  }
+ }

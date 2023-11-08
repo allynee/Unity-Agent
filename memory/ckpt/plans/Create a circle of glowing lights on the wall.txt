@@ -1,0 +1,7 @@
+User query:
+Create a circle of glowing lights on the wall
+
+Plan:
+1. Create a 10 “LED Cube” objects at the user’s feet position
+ 2. Position all the LED cubes to form a circle on the wall in front of the user 
+ 3. Update the Illumination of all the LED cubes to change every 10s

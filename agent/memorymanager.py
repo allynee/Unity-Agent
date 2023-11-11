@@ -145,9 +145,12 @@ class MemoryManager:
         task = obj.task
         plan_function_map = obj.new_plan_function_map
         plans = list(plan_function_map.keys())
+        plan_str = ""
+        for i, plan in enumerate(plans):
+            plan_str += f"{i+1}. {plan}\n"
         new_plan_dict = {
             "user_query": task,
-            "plan": plans,
+            "plan": plan_str,
         }
         self._add_new_plan(new_plan_dict)
         all_code_dicts = []

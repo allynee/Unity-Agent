@@ -142,7 +142,7 @@ def refine_code_pipeline(feedback):
     #TODO: Undone
 
 def add_new_experience():
-    if ss.new_plan_function_map is None:
+    if ss.generated_output.new_plan_function_map is None:
         st.write("You have not generated any scripts yet!")
         return
     else:
@@ -164,27 +164,27 @@ if "generated_output" not in st.session_state:
 
 st.write("1. Generate initial script")
 task = st.text_area(f"Enter task here", key="task")
-if st.button("Run", key="generate_script"):
+if st.button("Generate", key="generate_script"):
     with st.spinner("Processing"):
         generate_initial_script(task)
         st.success("Process done!")
 
 st.write("2. Refine plan")
 feedback = st.text_area(f"Enter feedback here", key="feedback")
-if st.button("Run", key="refine_plan"):
+if st.button("Refine", key="refine_plan"):
     with st.spinner("Processing"):
         refine_plan_pipeline(feedback)
         st.success("Process done!")
 
 st.write("3. Refine code")
 logs = st.text_area(f"Enter logs here", key="logs")
-if st.button("Run", key="refine_code"):
+if st.button("Refine", key="refine_code"):
     with st.spinner("Processing"):
         refine_code_pipeline(logs)
         st.success("Process done!")
 
 st.write("4. Add new experience")
-if st.button("Run", key="add_new_experience"):
+if st.button("Add experience", key="add_new_experience"):
     with st.spinner("Processing"):
         add_new_experience()
         st.success("Process done!")

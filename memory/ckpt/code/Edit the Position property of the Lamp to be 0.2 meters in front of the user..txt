@@ -1,0 +1,29 @@
+Instruction:
+Edit the Position property of the Lamp to be 0.2 meters in front of the user.
+
+Code:
+private Object3D lamp;
+
+private Vector3D CalculatePositionInFrontOfUser(float distance)
+{
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+    Vector3D userOrientation = GetUserOrientation();
+    return new Vector3D(
+        userFeetPosition.x + userOrientation.x * distance,
+        userFeetPosition.y,
+        userFeetPosition.z + userOrientation.z * distance
+    );
+}
+
+public void EditLampPositionInFrontOfUser()
+{
+    lamp = FindObject3DByName("Lamp");
+    if (lamp == null)
+    {
+        Debug.LogError("Lamp not found in the scene.");
+        return;
+    }
+
+    Vector3D newPosition = CalculatePositionInFrontOfUser(0.2f);
+    lamp.SetPosition(newPosition);
+}

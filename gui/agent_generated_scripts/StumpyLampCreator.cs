@@ -17,15 +17,27 @@ public class StumpyLampCreator : SceneAPI
         ResizeLamp();
     }
 
-    // Create a new object of type "Lamp" at the user's feet
-    private void CreateLamp()
+    public void CreateLamp()
     {
+        // Default spawn lamp at the user's feet
         Vector3D userFeetPosition = GetUsersFeetPosition();
+        
+        // Create the lamp
         lamp = CreateObject("NewLamp", "Lamp", userFeetPosition, new Vector3D(0, 0, 0));
     }
 
-    // Edit the Position property of the Lamp to be 0.2 meters in front of the user
-    private void EditLampPositionInFrontOfUser()
+    private Vector3D CalculatePositionInFrontOfUser(float distance)
+    {
+        Vector3D userFeetPosition = GetUsersFeetPosition();
+        Vector3D userOrientation = GetUserOrientation();
+        return new Vector3D(
+            userFeetPosition.x + userOrientation.x * distance,
+            userFeetPosition.y,
+            userFeetPosition.z + userOrientation.z * distance
+        );
+    }
+
+    public void EditLampPositionInFrontOfUser()
     {
         lamp = FindObject3DByName("Lamp");
         if (lamp == null)
@@ -38,31 +50,23 @@ public class StumpyLampCreator : SceneAPI
         lamp.SetPosition(newPosition);
     }
 
-    // Edit the Size property of the lamp to be shorter on the Y-axis and wider on the X and Z axes
-    private void ResizeLamp()
+    public void ResizeLamp()
     {
-        lamp = FindObject3DByName("Lamp");
         if (lamp == null)
         {
-            Debug.LogError("Lamp not found in the scene.");
+            Debug.LogError("Lamp doesn't exist. Create it first before resizing it.");
             return;
         }
 
-        Vector3D originalSize = lamp.GetSize();
-        float newYSize = originalSize.y * 0.5f; // 0.5 times of its original size on the Y-axis
-        float newXZSize = originalSize.x * 1.2f; // 1.2 times of its original size on the X and Z axes
-        lamp.SetSize(new Vector3D(newXZSize, newYSize, newXZSize));
-    }
+        // Get the current size of the lamp
+        Vector3D currentSize = lamp.GetSize();
 
-    // Calculate the position in front of the user based on the given distance
-    private Vector3D CalculatePositionInFrontOfUser(float distance)
-    {
-        Vector3D userFeetPosition = GetUsersFeetPosition();
-        Vector3D userOrientation = GetUserOrientation();
-        return new Vector3D(
-            userFeetPosition.x + userOrientation.x * distance,
-            userFeetPosition.y,
-            userFeetPosition.z + userOrientation.z * distance
-        );
+        // Calculate the new size based on the given instructions
+        float newX = currentSize.x * 0.8f;
+        float newY = currentSize.y * 0.6f;
+        float newZ = currentSize.z * 0.8f;
+
+        // Set the new size for the lamp
+        lamp.SetSize(new Vector3D(newX, newY, newZ));
     }
 }

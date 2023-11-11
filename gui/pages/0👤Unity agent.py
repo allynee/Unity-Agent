@@ -9,12 +9,14 @@ from pydantic import BaseModel, Field, validator, ConfigDict
 from typing import List, Optional
 
 class OutputCls:
-    def __init__(self, *, task:str, feedback: Optional[str] = None, plan: list[str], functions: list[str], script: str):
+    def __init__(self, *, task:str, feedback: Optional[str] = None, plan: list[str], functions: list[str], script: str, old_plan_function_map: dict, new_plan_function_map: dict):
         self.task = task
         self.feedback = feedback
         self.plan = plan
         self.functions = functions
         self.script = script
+        self.old_plan_function_map = old_plan_function_map 
+        self.new_plan_function_map = new_plan_function_map 
 
 class Output(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -23,6 +25,8 @@ class Output(BaseModel):
     plan: list[str]
     functions: list[str]
     script: str
+    old_plan_function_map: dict 
+    new_plan_function_map: dict 
 
 def get_class_name_from_code(code_string):
     # Extract the class name from the code string using regex
@@ -47,6 +51,16 @@ def create_and_download_cs_file(code_string):
     if btn:
         os.remove(file_name)
 
+def remove_numbered_bullets(text):
+    pattern = r'\d+\.\s'
+    cleaned_text = re.sub(pattern, "", text)
+    return cleaned_text.strip()
+
+def clean_function_text(text):
+    text = text.replace("```csharp\n", "")  # Replace the starting string with nothing
+    text = text.replace("```", "")          # Replace the ending string with nothing
+    return text.strip()
+
 def generate_initial_script(task):
     st.write(f"- Received your task to generate a script for: {task}")
     st.write("- Retrieving similar plans...")
@@ -56,50 +70,71 @@ def generate_initial_script(task):
     st.write("Here is the generated plan!")
     plans = plan.split("\n")
     st.write(plans)
-    ss.generated_output = OutputCls(
-        task=task,
-        plan=plans,
-        functions=None,
-        script=None
-    )
-    # functions = []
-    # st.write("Generating functions...")
-    # for plan in plans:
-    #     function_examples = ss.memorymanager._get_code(plan)
-    #     st.write("Function examples:\n\n")
-    #     st.write(function_examples)
-    #     functions.append(ss.coder._generate_function(plan, function_examples))
-    #     st.write("Function:")
-    #     st.write(functions[-1])
-    # st.write("Here are the generated functions!")
-    # st.write(functions)
-    # st.write("Generating script...")
-    # script = ss.coder._generate_script(task, plan, functions)
-    # st.write("Here is the generated script!")
-    # st.write(script)
-    # st.write("\n\nDownload the script here:")
-    # create_and_download_cs_file(script)
+    plan_function_map = {}
     # ss.generated_output = OutputCls(
     #     task=task,
     #     plan=plans,
-    #     functions=functions,
-    #     script=script
+    #     functions=None,
+    #     script=None
     # )
-    # st.write(ss.generated_output)
+    functions = []
+    st.write("Generating functions...")
+    for plan in plans:
+        function_examples = ss.memorymanager._get_code(plan)
+        function = ss.coder._generate_function(plan, function_examples)
+        function = clean_function_text(function)
+        functions.append(function)
+        plan_function_map[remove_numbered_bullets(plan)] = function
+    st.write("Here are the generated functions!")
+    st.write(functions)
+    st.write("Generating script...")
+    script = ss.coder._generate_script(task, plan, functions)
+    st.write("Here is the generated script!")
+    st.write(script)
+    st.write("\n\nDownload the script here:")
+    create_and_download_cs_file(script)
+    ss.generated_output = OutputCls(
+        task=task,
+        plan=plans,
+        functions=functions,
+        script=script,
+        old_plan_function_map=plan_function_map,
+        new_plan_function_map= plan_function_map
+    )
+    st.write("\n\nThe stored object:")
+    st.write(ss.generated_output)
 
 def refine_plan_pipeline(feedback):
     ss.generated_output.feedback = feedback
-    st.write("Original Plan:")
-    st.write(ss.generated_output.plan)
+    st.markdown("## Original Plan:")
+    st.write("\n\n".join(ss.generated_output.plan))
     new_plan = ss.critic._refine_plan(ss.generated_output)
-    st.write("New Plan:")
+    st.markdown("## New Plan:")
     st.write(new_plan)
     new_plans = new_plan.split("\n")
-    
-    # index_list, new_steps = ss.critic._refine_plan(ss.generated_output)
-    # st.write(index_list)
-    # st.write(new_steps)
-    # ss.generated_output = ss.critic._refine_plan(ss.generated_output)
+    new_plans = [plan for plan in new_plans if plan.strip()]
+    plan_function_map = {}
+    st.markdown("## Generating New Functions...")
+    for plan in new_plans:
+        cleaned_instruction = remove_numbered_bullets(plan)
+        if cleaned_instruction in ss.generated_output.old_plan_function_map:
+            plan_function_map[cleaned_instruction] = ss.generated_output.old_plan_function_map[cleaned_instruction]
+        else:
+            st.markdown("Generating a new function for \n ```" + plan + "```")
+            function_examples = ss.memorymanager._get_code(cleaned_instruction)
+            function = ss.coder._generate_function(cleaned_instruction, function_examples)
+            function = clean_function_text(function)
+            plan_function_map[cleaned_instruction] = function
+            st.markdown("New function: \n```csharp\n" + function)
+    new_functions = list(plan_function_map.values())
+    script = ss.coder._generate_script(task, new_plan, new_functions)
+    st.markdown("## Here is the newly generated script!")
+    st.markdown("```csharp\n" + script)
+    st.markdown("\n\n## Download the script here:")
+    create_and_download_cs_file(script)
+    ss.generated_output.new_plan_function_map = plan_function_map
+    st.markdown("\n\n## The stored object:")
+    st.write(ss.generated_output)
 
 def refine_code_pipeline(feedback):
     ss.generated_output.feedback = feedback
@@ -107,7 +142,16 @@ def refine_code_pipeline(feedback):
     #TODO: Undone
 
 def add_new_experience():
-    ss.memorymanager._add_new_experience(ss.generated_output)
+    if ss.new_plan_function_map is None:
+        st.write("You have not generated any scripts yet!")
+        return
+    else:
+        plan, code = ss.memorymanager._add_new_experience(ss.generated_output)
+        st.write("Added new experience to memory!")
+        st.write("Plan added:")
+        st.write(plan)
+        st.write("Code added:")
+        st.write(code)
 
 st.title("Testing entire pipeline")
 ss = st.session_state
@@ -130,4 +174,17 @@ feedback = st.text_area(f"Enter feedback here", key="feedback")
 if st.button("Run", key="refine_plan"):
     with st.spinner("Processing"):
         refine_plan_pipeline(feedback)
+        st.success("Process done!")
+
+st.write("3. Refine code")
+logs = st.text_area(f"Enter logs here", key="logs")
+if st.button("Run", key="refine_code"):
+    with st.spinner("Processing"):
+        refine_code_pipeline(logs)
+        st.success("Process done!")
+
+st.write("4. Add new experience")
+if st.button("Run", key="add_new_experience"):
+    with st.spinner("Processing"):
+        add_new_experience()
         st.success("Process done!")

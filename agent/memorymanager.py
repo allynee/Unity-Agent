@@ -63,21 +63,19 @@ class MemoryManager:
             reader = csv.DictReader(file)
             for i, row in enumerate(reader):
                 print(f"Embedding code {i+1}...")
-                category = row["Category"]
                 instruction = row["Instruction"]
                 code = row["Code"]
                 instruction_embedding = self.embeddings.embed_query(instruction)
                 self.codedb.add(
                     embeddings=[instruction_embedding],
                     metadatas=[{
-                        "category": category,
                         "instruction": instruction,
                         "code": code,
                         }],
                     ids=[instruction]
                 )
                 U.dump_text(
-                    f"Instruction:\n{instruction}\n\nCategory:\n{category}\n\nCode:\n{code}", f"../memory/{self.ckpt_dir}/code/{category} - {instruction}.txt"
+                    f"Instruction:\n{instruction}\n\nCode:\n{code}", f"../memory/{self.ckpt_dir}/code/{instruction}.txt"
                 )
         return f"Intialized memory on coding in {now()-t0} seconds."
     
@@ -91,7 +89,6 @@ class MemoryManager:
         codes = self.codedb.query(
             query_embeddings=instruction_embedding,
 			n_results=k,
-			#where={"metadata_field": "is_equal_to_this"}, #TODO: Potentially filter by category
             #where_document={"$contains":"search_string"}
 			include=["metadatas"]
         )
@@ -111,21 +108,19 @@ class MemoryManager:
         return plans["metadatas"][0]
 
     def _add_new_code(self, info):
-        category = info["category"]
         instruction = info["instruction"]
         code = info["code"]
         instruction_embedding = self.embeddings.embed_query(instruction)
         self.codedb.add(
             embeddings=[instruction_embedding],
             metadatas=[{
-                "category": category,
                 "instruction": instruction,
                 "code": code,
                 }],
             ids=[instruction] #TODO: Account for repeated instructions
         )
         U.dump_text(
-            f"Instruction:\n{instruction}\n\nCategory:\n{category}\n\nCode:\n{code}", f"../memory/{self.ckpt_dir}/code/{category} - {instruction}.txt"
+            f"Instruction:\n{instruction}\n\nCode:\n{code}", f"../memory/{self.ckpt_dir}/code/{instruction}.txt"
         )
         return f"Added code for instruction \"{instruction}\""
     
@@ -145,6 +140,25 @@ class MemoryManager:
             f"User query:\n{user_query}\n\nPlan:\n{plan}", f"../memory/{self.ckpt_dir}/plans/{user_query}.txt"
         )
         return f"Added plan for user query \"{user_query}\""
+    
+    def _add_new_experience(self, obj):
+        task = obj.task
+        plan_function_map = obj.new_plan_function_map
+        plans = list(plan_function_map.keys())
+        new_plan_dict = {
+            "user_query": task,
+            "plan": plans,
+        }
+        self._add_new_plan(new_plan_dict)
+        all_code_dicts = []
+        for plan, function in plan_function_map.items():
+            code_dict = {
+                "instruction": plan,
+                "code": function,
+            }
+            all_code_dicts.append(code_dict)
+            self._add_new_code(code_dict)
+        return new_plan_dict, all_code_dicts
     
     def _delete_plan_memory(self):
         self.client.delete_collection(name="plansdb")

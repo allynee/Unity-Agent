@@ -62,35 +62,26 @@ def clean_function_text(text):
     return text.strip()
 
 def generate_initial_script(task):
-    st.write(f"- Received your task to generate a script for: {task}")
-    st.write("- Retrieving similar plans...")
+    st.markdown(f"## Received your task to generate a script for: {task}")
+    st.markdown("## Generating the plan...")
     plan_examples = ss.memorymanager._get_plan(task)
-    st.write("- Generating plan...")
     plan = ss.planner._generate_plan(task, plan_examples)
-    st.write("Here is the generated plan!")
+    st.write(plan)
     plans = plan.split("\n")
-    st.write(plans)
     plan_function_map = {}
-    # ss.generated_output = OutputCls(
-    #     task=task,
-    #     plan=plans,
-    #     functions=None,
-    #     script=None
-    # )
     functions = []
-    st.write("Generating functions...")
+    st.markdown("## Generating functions...")
     for plan in plans:
+        st.write("Generating function for \n ```" + plan + "```")
         function_examples = ss.memorymanager._get_code(plan)
         function = ss.coder._generate_function(plan, function_examples)
         function = clean_function_text(function)
         functions.append(function)
         plan_function_map[remove_numbered_bullets(plan)] = function
-    st.write("Here are the generated functions!")
-    st.write(functions)
-    st.write("Generating script...")
+        st.write("\n```csharp\n" + function + "\n\n")
+    st.markdown("## Generating the entire script...")
     script = ss.coder._generate_script(task, plan, functions)
-    st.write("Here is the generated script!")
-    st.write(script)
+    st.write("```csharp\n" + script)
     st.write("\n\nDownload the script here:")
     create_and_download_cs_file(script)
     ss.generated_output = OutputCls(

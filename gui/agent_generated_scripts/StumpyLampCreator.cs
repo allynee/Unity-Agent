@@ -8,7 +8,7 @@ using UnityEngine.AI;
 
 public class StumpyLampCreator : SceneAPI
 {       
-    private Object3D lamp; // Class-level variable to maintain the lamp object state
+    private Object3D lamp;
 
     private void Start()
     {
@@ -50,7 +50,7 @@ public class StumpyLampCreator : SceneAPI
         lamp.SetPosition(newPosition);
     }
 
-    public void ResizeLamp()
+    private void ResizeLamp()
     {
         if (lamp == null)
         {

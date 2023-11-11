@@ -5,9 +5,13 @@ import sys
 sys.path.append("/Users/allyne/Documents/GitHub/Unity-Agent/")
 import agent as A
 
-def get_function(task, examples):
+def get_function(task):
 	coder = A.Coder()
-	output = coder._generate_function(task=task, examples=examples)
+	memorymanager = A.MemoryManager()
+	function_examples = memorymanager._get_code(task)
+	st.write("Function examples:\n\n")
+	st.write(function_examples)
+	output = coder._generate_function(task=task, examples=function_examples)
 	st.write(output)
 
 def get_script(task, plan, functions):
@@ -19,10 +23,9 @@ st.title("Testing code agent 🤖")
 
 st.write("1. Generate function")
 instruction = st.text_area(f"Enter instruction here", key="instruction")
-examples = st.text_area(f"Enter examples here", key="examples")
 if st.button("Run", key="generate_function"):
 	with st.spinner("Processing"):
-		get_function(instruction, examples)
+		get_function(instruction)
 		st.success("Process done!")
 
 st.write("2. Generate script")

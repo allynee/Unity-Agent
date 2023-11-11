@@ -5,6 +5,8 @@ import openai
 import re
 
 class Coder:
+    # gpt-3.5-turbo-1106
+    # gpt-4-0613
     def __init__(self, model_name="gpt-3.5-turbo-1106", temperature=0, resume=False, ckpt_dir="ckpt", execution_error=True):
         load_dotenv(find_dotenv())
         openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -34,10 +36,11 @@ class Coder:
         Use the provided system to manipulate the room.
                 
         Follow these steps:
-        1. Create a public void method that corresponds to the task. 
-        2. Write a C# code that implements the task. You may use and create private fields and methods to achieve this. 
+        1. Write a C# code that implements the task. Create private fields and methods to achieve this. 
+        2. Declare private fields above your method(s).
         3. Use Debug.Log statements for action logging and error handling.
         4. Adhere strictly to standard C# methods. 
+        5. Add comments to your code to explain your thought process.
                 
         Here are all the classes and functions you may use in your code:
         ```
@@ -124,12 +127,16 @@ class Coder:
         Here are examples of similar functions which may or may not be applicable to your task:\n {{examples}}
                 
         Your format for responses should strictly be: 
+                         
+        // All class members should be declared here
+                         
         public void Method1()
         {
             // Insert the method code here
         }
+        // And so on... The number of methods will depend on the user's request. 
 
-        *Note: Output should not contain any text other than the method(s).*
+        *Note: Output should not contain any text other than the class members and method(s).*
         {{~/user}}
         {{#assistant~}}
         {{gen "function" temperature=0}}
@@ -156,6 +163,7 @@ class Coder:
         3. Use class-level variables to maintain state across methods.
         4. Use Debug.Log statements for action logging and error handling.
         5. Adhere strictly to standard C# methods and conventions.
+        6. Add comments to your code to explain your thought process.
 
         Your format for responses should strictly be: 
         ```
@@ -187,7 +195,7 @@ class Coder:
         *Note: Output should not contain any text other than script containing method(s).*
         {{~/user}}
         {{#assistant~}}
-        {{gen "script" temperature=0}}
+        {{gen "script" temperature=0 max_tokens=4096}}
         {{~/assistant}}
         ''')  
         resp = coder(task=task, plan=plan, functions=functions)

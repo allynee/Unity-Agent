@@ -56,34 +56,49 @@ def generate_initial_script(task):
     st.write("Here is the generated plan!")
     plans = plan.split("\n")
     st.write(plans)
-    functions = []
-    st.write("Generating functions...")
-    for plan in plans:
-        function_examples = ss.memorymanager._get_code(plan)
-        functions.append(ss.coder._generate_function(plan, function_examples))
-    st.write("Here are the generated functions!")
-    st.write(functions)
-    st.write("Generating script...")
-    script = ss.coder._generate_script(task, plan, functions)
-    st.write("Here is the generated script!")
-    st.write(script)
-    st.write("\n\nDownload the script here:")
-    create_and_download_cs_file(script)
     ss.generated_output = OutputCls(
         task=task,
         plan=plans,
-        functions=functions,
-        script=script
+        functions=None,
+        script=None
     )
-    st.write(ss.generated_output)
+    # functions = []
+    # st.write("Generating functions...")
+    # for plan in plans:
+    #     function_examples = ss.memorymanager._get_code(plan)
+    #     st.write("Function examples:\n\n")
+    #     st.write(function_examples)
+    #     functions.append(ss.coder._generate_function(plan, function_examples))
+    #     st.write("Function:")
+    #     st.write(functions[-1])
+    # st.write("Here are the generated functions!")
+    # st.write(functions)
+    # st.write("Generating script...")
+    # script = ss.coder._generate_script(task, plan, functions)
+    # st.write("Here is the generated script!")
+    # st.write(script)
+    # st.write("\n\nDownload the script here:")
+    # create_and_download_cs_file(script)
+    # ss.generated_output = OutputCls(
+    #     task=task,
+    #     plan=plans,
+    #     functions=functions,
+    #     script=script
+    # )
+    # st.write(ss.generated_output)
 
 def refine_plan_pipeline(feedback):
     ss.generated_output.feedback = feedback
-    st.write("Plan array")
+    st.write("Original Plan:")
     st.write(ss.generated_output.plan)
-    index_list, new_steps = ss.critic._refine_plan(ss.generated_output)
-    st.write(index_list)
-    st.write(new_steps)
+    new_plan = ss.critic._refine_plan(ss.generated_output)
+    st.write("New Plan:")
+    st.write(new_plan)
+    new_plans = new_plan.split("\n")
+    
+    # index_list, new_steps = ss.critic._refine_plan(ss.generated_output)
+    # st.write(index_list)
+    # st.write(new_steps)
     # ss.generated_output = ss.critic._refine_plan(ss.generated_output)
 
 def refine_code_pipeline(feedback):

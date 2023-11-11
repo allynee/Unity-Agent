@@ -1,0 +1,6 @@
+User query:
+Create a pink table
+
+Plan:
+1. Create a new object of type "Table"
+2. Edit the Color property of the lamp to pink with RGBA(255,105,180,1)

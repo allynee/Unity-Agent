@@ -1,0 +1,21 @@
+Instruction:
+Create four new objects of type "Chair"
+
+
+Category:
+Create
+
+Code:
+private const int CHAIR_COUNT = 4;
+private List<Object3D> chairs = new List<Object3D>();
+
+public void CreateChairsAtUsersFeet()
+{
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+    
+    for (int i = 0; i < CHAIR_COUNT; i++)
+    {
+        Object3D chair = CreateObject($"Chair_{i}", "Chair", userFeetPosition, new Vector3D(0, 0, 0));
+        chairs.Add(chair);
+    }
+}

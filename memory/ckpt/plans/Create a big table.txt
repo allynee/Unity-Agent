@@ -1,6 +1,0 @@
-User query:
-Create a big table
-
-Plan:
-1. Create a new object of type "Table"
-2. Edit the Size property of the Table to be 1.5 times of its current size

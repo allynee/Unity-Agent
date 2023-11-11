@@ -1,0 +1,424 @@
+Cat ID,Category,Instruction,Code
+1,Create,"Find a “Fox” object in the scene. If there are no ""Fox"" objects found, create a new object of type ""Fox""
+","private Object3D foxObject3D;
+
+public void CreateOrFindFox()
+{
+    // Attempt to find the fox in the user's field of view first.
+    List<Object3D> objectsInView = GetAllObject3DsInScene();
+    foxObject3D = objectsInView.Find(obj => obj.GetType().Equals(""Fox""));
+
+    // If the fox is not found in the field of view, find it in the scene.
+    if (foxObject3D == null){
+        Debug.Log(""Fox not found in user's field of view."")
+        foxObject3D = FindObject3DByName(""Fox"");
+        Debug.Log(""Fox found in the scene."")
+    }
+    
+    // If there are no foxes in the scene, create one.
+    if (foxObject3D == null)
+    {
+        Debug.Log(""Fox not found in the scene."");
+        Vector3D positionToCreateFox = GetUsersFeetPosition(); 
+        foxObject3D = CreateObject(""Fox"", ""Fox"", positionToCreateFox, new Vector3D(0, 0, 0));
+        Debug.Log(""Fox created in the scene."");
+    }   
+}"
+9,Interact,"Initialize a NavMeshAgent component for the Fox, setting the Fox's NavMeshAgent's speed to default 2.0 units/s, angular speed to 120 degrees/s, and acceleration to 8.0 units/s^2
+","private GameObject foxGameObject;
+private Object3D foxObject3D;
+private NavMeshAgent navMeshAgent;
+
+public void CreateNavMeshAgent()
+{
+    foxObject3D = FindObject3DByName(""Fox"");
+    if (foxObject3D == null)
+    {
+        Vector3D positionToCreateFox = GetUsersFeetPosition(); 
+        foxObject3D = CreateObject(""Fox"", ""Fox"", positionToCreateFox, new Vector3D(0, 0, 0));
+    }   
+    // Convert the Object3D to a GameObject.
+    foxGameObject = foxObject3D.ToGameObject();
+
+    // Initialize the NavMeshAgent for the fox.
+    navMeshAgent = foxGameObject.GetComponent<NavMeshAgent>();
+
+    if (navMeshAgent == null)
+    {
+        navMeshAgent = foxGameObject.AddComponent<NavMeshAgent>();
+
+    }
+    
+    if (navMeshAgent == null)
+    {
+        Debug.LogError(""NavMeshAgent not found or could not be added to the fox."");
+        return;
+    }
+    // Configure the NavMeshAgent properties to suit user's instructions
+    navMeshAgent.speed = 2.0f;
+    navMeshAgent.angularSpeed = 10;
+    navMeshAgent.acceleration = 1;
+}"
+3,Edit rotation,"Continuously edit the Rotation property of the Fox to face the user 
+","private Object3D foxObject3D;
+
+private void Update()
+{
+    if (foxObject3D!=null){
+        RotateFoxToFaceUser();
+    }else{
+        foxObject3D = FindObject3DByName(""Fox"");
+    }
+}
+
+public void RotateFoxToFaceUser()
+{
+    // Get the user's head position to face the fox towards the user
+    Vector3D userHeadPosition = GetUsersHeadPosition();
+    Vector3D foxPosition = foxObject3D.GetPosition();
+
+    // Calculate the direction from the fox to the user's head position
+    // Only considering the x and z components for horizontal rotation
+    Vector3 directionToUser = new Vector3(userHeadPosition.x - foxPosition.x, 0, userHeadPosition.z - foxPosition.z);
+
+    // Rotate the fox to face the user
+    Quaternion rotationToFaceUser = Quaternion.LookRotation(directionToUser);
+
+    // Convert the Quaternion rotation to Euler angles, then to Vector3D type for SetRotation
+    Vector3 foxRotationEuler = rotationToFaceUser.eulerAngles;
+    Vector3D foxRotation = new Vector3D(foxRotationEuler.x, foxRotationEuler.y, foxRotationEuler.z);
+    foxObject3D.SetRotation(foxRotation);
+}"
+2,Edit position,"Continuously check if the Fox is more than 1.5 meters away from the user with a Boolean variable. If true, update the Fox's NavMeshAgent's destination to a point 0.5 meters in front of the user's current orientation
+","private Object3D foxObject3D;
+private GameObject foxGameObject;
+private NavMeshAgent navMeshAgent;
+
+private void Update()
+{
+    if (navMeshAgent!=null && foxObject3D!=null){
+        MoveFoxToUser();
+    }else{
+        foxObject3D = FindObject3DByName(""Fox"");
+        foxGameObject = foxObject3D.ToGameObject();
+        navMeshAgent = foxGameObject.GetComponent<NavMeshAgent>();
+    }
+}
+
+public void MoveFoxToUser()
+{
+    // Get the user's current feet position and orientation.
+    Vector3D userFeetPosition3D = GetUsersFeetPosition();
+    Vector3D userOrientation3D = GetUserOrientation();
+    // Important: convert to a Vector3 type for calculations later
+    Vector3 userFeetPosition = userFeetPosition3D.ToVector3();
+    Vector3 userOrientation = userOrientation3D.ToVector3();
+
+    // Calculate fox's destination position to be 0.5 meters in front of the user.
+    // Use Vector3 to calculate the destination position.
+    Vector3 destination = userFeetPosition + userOrientation * 0.5f;
+
+    // Check the distance between the fox and the destination
+    // Vector3D does not have a Distance method, so we convert to Vector3 first.
+    float distanceToUser = Vector3.Distance(foxObject3D.transform.position, destination);
+
+    // If the user is more than 0.7 meters away, the fox should walk towarsd the user.
+    bool shouldMoveTowardsUser= distanceToUser > 0.7f;
+
+    if (shouldMoveTowardsUser){
+        navMeshAgent.SetDestination(destination);
+    }
+}"
+1,Create,"Create a new object of type “Chair”.
+","private Object3D chair;
+
+public void CreateChairsAtUsersFeet()
+{
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+    chair = CreateObject(""NewChair"", ""Chair"", userFeetPosition, new Vector3D(0, 0, 0));
+    if (chair == null)
+    {
+        Debug.LogError(""Failed to create the chair."");
+    }
+}"
+2,Edit position,Edit the Position property of the Chair to a default 2 meters in front of the user. ,"private Object3D chair;
+
+public void PositionChairInFrontofUser(){
+    chair = FindObject3DByName(""Chair"");
+    if (chair== null)
+    {
+        Vector3D positionToCreateChair = GetUsersFeetPosition(); 
+        chair = CreateObject(""Chair"", ""Chair"", positionToCreateChair, new Vector3D(0, 0, 0));
+    }   
+    // Get the user's feet position and orientation
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+    Vector3D userOrientation = GetUserOrientation();
+    
+    // Assume a default 2m in front, but adjust based on objects and walls.
+    float defaultDistance = 2.0f;
+
+    // Convert user feet position to Vector3 for distance calculations.
+    Vector3 unityUserFeetPos = userFeetPosition.ToVector3();
+
+    float minDistance = defaultDistance;
+
+    // Get all objects in the field of view.
+    var objectsInView = GetAllObject3DsInFieldOfView();
+
+    // Check each object in the field of view to find the minimum distance
+    foreach (var obj in objectsInView)
+    {   
+        // Do not account for object you are trying to move
+        if (obj.name!=""NewChair""){
+            Vector3 objectPosition = obj.GetPosition().ToVector3();
+            float distance = Vector3.Distance(new Vector3(objectPosition.x, unityUserFeetPos.y, objectPosition.z), unityUserFeetPos);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+            }
+        }
+    }
+
+    // Check all wall positions to find the closest distance
+    foreach (WallName wall in Enum.GetValues(typeof(WallName)))
+    {
+        Vector3D wallPosition = GetWallPosition(wall);
+        Vector3 unityWallPosition = wallPosition.ToVector3();
+        float wallDistance = Vector3.Distance(new Vector3(unityWallPosition.x, unityUserFeetPos.y, unityWallPosition.z), unityUserFeetPos);
+        if (wallDistance < minDistance)
+        {
+            minDistance = wallDistance;
+        }
+    }
+
+    // Ensure the chair is not placed too close to the user or objects
+    minDistance = Mathf.Max(minDistance - 0.1f, 0.1f); // Use 0.1m offset
+
+    // Calculate the new spawn position based on the minimum distance found
+    Vector3D spawnPosition = new Vector3D(
+        userFeetPosition.x + userOrientation.x * minDistance,
+        userFeetPosition.y,
+        userFeetPosition.z + userOrientation.z * minDistance
+    );
+
+    // Set the position of the chair
+    chair.SetPosition(spawnPosition);
+}"
+8,Edit levitation,Edit the Levitation property of the Chair to true and edit the Position property of the Chair to 1.5 meters above its current position. ,"private Object3D chair;
+
+public void MakeChairFloat()
+{
+    chair = FindObject3DByName(""Chair"");
+    if (chair== null)
+    {
+        Vector3D positionToCreateChair = GetUsersFeetPosition(); 
+        chair = CreateObject(""Chair"", ""Chair"", positionToCreateChair, new Vector3D(0, 0, 0));
+    }   
+    // Levitate the chair by a given amount (e.g., 1.5 meters above the ground)
+    chair.Levitate(true);
+    Vector3D chairPosition = chair.GetPosition();
+    chair.SetPosition(new Vector3D(chairPosition.x, chairPosition.y + 1.5f, chairPosition.z));
+}"
+3,Edit rotation,"Edit the Rotation property of the chair to face the user, correcting for an initial right-facing orientation of the chair by rotating it to face the user's head position.","private Object3D chair;
+
+public void RotateChairToFaceUser()
+{
+    chair = FindObject3DByName(""Chair"");
+    if (chair== null)
+    {
+        Vector3D positionToCreateChair = GetUsersFeetPosition(); 
+        chair = CreateObject(""Chair"", ""Chair"", positionToCreateChair, new Vector3D(0, 0, 0));
+    }   
+
+    // Get the user's head position to face the chair towards the user
+    Vector3D userHeadPosition = GetUsersHeadPosition();
+    Vector3D chairPosition = chair.GetPosition();
+
+    // Calculate the direction from the chair to the user's head position
+    // Only considering the x and z components for horizontal rotation
+    Vector3 directionToUser = new Vector3(userHeadPosition.x - chairPosition.x, 0, userHeadPosition.z - chairPosition.z);
+
+    // Rotate the chair to face the user, correcting for the initial chair orientation
+    Quaternion rotationToFaceUser = Quaternion.LookRotation(directionToUser);
+    Quaternion correctedRotation = Quaternion.Euler(0, -90, 0) * rotationToFaceUser; // Adjust for the chair's initial right-facing orientation
+
+    // Convert the corrected Quaternion rotation to Euler angles, then Vector3D type for SetRotation
+    Vector3 chairRotationEuler = correctedRotation.eulerAngles;
+    Vector3D chairRotation = new Vector3D(chairRotationEuler.x, chairRotationEuler.y, chairRotationEuler.z);
+    chair.SetRotation(chairRotation);
+}"
+1,Create,"Create four new objects of type ""Chair""
+","private const int CHAIR_COUNT = 4;
+private List<Object3D> chairs = new List<Object3D>();
+
+public void CreateChairsAtUsersFeet()
+{
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+    
+    for (int i = 0; i < CHAIR_COUNT; i++)
+    {
+        Object3D chair = CreateObject($""Chair_{i}"", ""Chair"", userFeetPosition, new Vector3D(0, 0, 0));
+        chairs.Add(chair);
+    }
+}"
+2,Edit position,"Edit the Position property of each chair to be 0.5 meters in front of each room wall
+","private List<Object3D> chairs = new List<Object3D>();
+
+public void PositionChairsInFrontOfWalls() 
+{
+    int chairIndex = 0;
+    // Iterate over all walls 
+    foreach (WallName wall in Enum.GetValues(typeof(WallName)))
+    {
+        Vector3D wallPosition = GetWallPosition(wall);
+        if (wallPosition == null)
+        {
+            Debug.LogError($""Failed to get position for wall: {wall}"");
+            return;
+        }
+        Vector3D chairPosition = CalculateChairPositionInFrontOfWall(wallPosition);
+        chairs[chairIndex].SetPosition(chairPosition);
+        chairIndex++;
+    }
+}
+
+private Vector3D CalculateChairPositionInFrontOfWall(Vector3D wallPosition)
+{
+    float xOffset = 0;
+    float zOffset = 0;
+
+    if (wallPosition.x > sceneSize.x) 
+        xOffset = -0.5f;
+    else if (wallPosition.x < sceneSize.x)
+        xOffset = 0.5f;
+
+    if (wallPosition.z > sceneSize.z)
+        zOffset = -0.5f;
+    else if (wallPosition.z < sceneSize.z)
+        zOffset = 0.5f;
+
+    return new Vector3D(
+        wallPosition.x + xOffset, 
+        0, 
+        wallPosition.z + zOffset
+    );
+}"
+1,Create,"Create a new object of type “Lamp” 
+","private Object3D lamp;
+
+public void CreateLamp()
+{
+    // Default spawn lamp at the user's feet
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+    
+    // Create the lamp
+    lamp = CreateObject(""NewLamp"", ""Lamp"", userFeetPosition, new Vector3D(0, 0, 0));
+}"
+2,Edit position,"If a table is in view, edit the Position property of the Lamp at the center on top of the table
+","private Object3D lamp;
+
+public void PlaceLampOnTableInView()
+{
+    // Check if the lamp exists before trying to move it
+    if (lamp == null) 
+    {
+        Vector3D positionToCreateLamp = GetUsersFeetPosition(); 
+        lamp = CreateObject(""Lamp"", ""Lamp"", positionToCreateLamp, new Vector3D(0, 0, 0));
+    }
+
+    // Get all objects in the user's field of view
+    List<Object3D> objectsInView = GetAllObject3DsInFieldOfView();
+
+    // Find the first table in the user's field of view
+    Object3D table = objectsInView.Find(obj => obj.GetType().Equals(""Table""));
+
+    if (table != null)
+    {   
+        Debug.Log(""Found a table to put the lamp on!"");
+        // Get the position and size of the table
+        Vector3D tablePosition = table.GetPosition();
+        Vector3D tableSize = table.GetSize();
+        float tableHeight = tableSize.y;
+
+        // Get the size of the lamp
+        Vector3D lampSize = lamp.GetSize();
+        float lampHeight = lampSize.y;
+
+        Vector3D lampPosition = new Vector3D(tablePosition.x, tablePosition.y + tableHeight, tablePosition.z); 
+        Debug.Log(""Lamp position: "" + lampPosition.x + "", "" + lampPosition.y + "", "" + lampPosition.z);
+
+        // Set the new position for the lamp
+        lamp.SetPosition(lampPosition);
+    }
+    else
+    {
+        Debug.LogWarning(""No table found in the user's field of view."");
+    }
+}"
+5,Edit color,"Edit the Color property of the lamp to blue with RGBA(0, 0, 1, 1)
+","private Object3D lamp;
+
+public void ChangeLampColorToBlue()
+{
+    if (lamp == null)
+    {
+        Vector3D positionToCreateLamp = GetUsersFeetPosition(); 
+        lamp = CreateObject(""Lamp"", ""Lamp"", positionToCreateLamp, new Vector3D(0, 0, 0));
+    }
+     // Set the color of the lamp to blue
+    lamp.SetColor(new Color3D(0, 0, 1, 1)); // RGB for blue color
+}"
+4,Edit size,"Edit the Size property of the lamp to be 1.2 times of its original size
+","private Object3D lamp;
+
+public void EnlargeLampOnTable()
+{
+    if (lamp == null)
+    {
+        Debug.LogError(""Lamp doesn't exist. Create it first before resizing it."");
+        return;
+    }
+
+    // Get the size and position of the lamp
+    Vector3D lampSize = lamp.GetSize();
+    Vector3D lampPosition = lamp.GetPosition();
+
+    // Store the new ideal size of the lamp (assuming 1.2 times as per instruction)
+    const float idealScale = 1.2f;
+
+    // When enlarging the lamp, we need to consider the environment to ensure the lamp does not exceed the max possible size.
+    // First, account for the table that the lamp is on for the max x & z size.
+    List<Object3D> objectsInView = GetAllObject3DsInFieldOfView();
+    Object3D table = objectsInView.Find(obj => obj.GetType().Equals(""Table""));
+    if (table == null)
+    {
+        Debug.LogWarning(""The lamp does not seem to be on a table."");
+        return;
+    }
+
+    Vector3D tableSize = table.GetSize();
+    Vector3D tablePosition = table.GetPosition();
+    float scaleX = Mathf.Min(idealScale, tableSize.x / lampSize.x);
+    float scaleZ = Mathf.Min(idealScale, tableSize.z / lampSize.z);
+
+    // Next, we get the ceiling height for the max y size.
+    Vector3D sceneSize = GetSceneSize();
+    float ceilingHeight = sceneSize.y;
+    float distanceToCeiling = ceilingHeight - (tablePosition.y + tableSize.y);
+    float scaleY = Mathf.Min(idealScale, distanceToCeiling / lampSize.y);
+
+    // Now we calculate the new size of the lamp
+    float minScale = Mathf.Min(idealScale, scaleX, scaleY, scaleZ); 
+    Vector3D newLampSize = new Vector3D(lampSize.x * minScale, lampSize.y * minScale, lampSize.z * minScale);
+
+    // Calculate the new position for the lamp (same x & z, but y is adjusted for the new height)
+    Vector3D newPosition = new Vector3D(
+        lampPosition.x, 
+        tablePosition.y + tableSize.y, 
+        lampPosition.z 
+    );
+    Debug.LogWarning(newPosition.y);
+    // Apply the new size and position to the lamp
+    lamp.SetSize(newLampSize);
+    lamp.SetPosition(newPosition);
+}"

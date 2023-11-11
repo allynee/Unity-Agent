@@ -1,0 +1,6 @@
+User query:
+Turn the fox to face me
+
+Plan:
+1. Find a “Fox” object in the scene. If there are no "Fox" objects found, create a new object of type "Fox"
+2. Edit the Rotation property of the Fox to face the user

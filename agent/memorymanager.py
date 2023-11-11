@@ -12,6 +12,8 @@ import sys
 sys.path.append("/Users/allyne/Documents/GitHub/Unity-Agent/")
 
 class MemoryManager:
+    # gpt-3.5-turbo-1106
+    # gpt-4-0613
     def __init__(self, model_name="gpt-3.5-turbo-1106", temperature=0, resume=False, retrieve_top_k=3, ckpt_dir="ckpt"):
         load_dotenv(find_dotenv())
         openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -81,7 +83,8 @@ class MemoryManager:
     
     def _get_code(self, instruction):
         instruction_embedding = self.embeddings.embed_query(instruction)
-        k = min(self.codedb.count(), self.retrieve_top_k)
+        # Retrieve 2 functions only
+        k = min(self.codedb.count(), 2)
         if k==0:
             return []
         print(f"Retrieving {k} codes...")

@@ -2,6 +2,7 @@ import guidance
 from dotenv import load_dotenv, find_dotenv
 import os
 import openai
+import re
 
 class Coder:
     def __init__(self, model_name="gpt-3.5-turbo-1106", temperature=0, resume=False, ckpt_dir="ckpt", execution_error=True):
@@ -138,7 +139,6 @@ class Coder:
         return resp["function"]
          
     def _generate_script(self, task, plan, functions):
-        guidance.llm = guidance.llms.OpenAI("gpt-4")
         coder = guidance('''
         {{#system~}}
         You are a skilled C# developer tasked with crafting a coherent C# script, ensuring that created objects and states are managed and utilized effectively across multiple methods.
@@ -187,12 +187,21 @@ class Coder:
         *Note: Output should not contain any text other than script containing method(s).*
         {{~/user}}
         {{#assistant~}}
-        {{gen "script" temperature=0 max_tokens=4096}}
+        {{gen "script" temperature=0}}
         {{~/assistant}}
         ''')  
         resp = coder(task=task, plan=plan, functions=functions)
-        using = "using UnityEngine;\nusing UnityEngine.Events;\nusing UnityEngine.XR.Interaction.Toolkit;\nusing System;\nusing System.Collections.Generic;\nusing Enums;\n\n"
-        return using + resp["script"]
+        script = resp["script"]
+        script = edit_code_string(script)
+        script = "using UnityEngine;\nusing UnityEngine.Events;\nusing UnityEngine.XR.Interaction.Toolkit;\nusing System;\nusing System.Collections.Generic;\nusing Enums;\nusing UnityEngine.AI;\n\n" + script
+        return script
     
-#TODO: Add more imports for NavMeshAgent
+def edit_code_string(code_string):
+    try:
+        first_index = code_string.index("public class")
+        last_index = code_string.rindex("}")  
+        return code_string[first_index:last_index+1]  
+    except ValueError:
+        print("Invalid code: 'using' or '}' not found.")
+    
              

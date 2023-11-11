@@ -24,14 +24,6 @@ class Output(BaseModel):
     functions: list[str]
     script: str
 
-def edit_code_string(code_string):
-    try:
-        first_index = code_string.index("using")
-        last_index = code_string.rindex("}")  
-        return code_string[first_index:last_index+1]  
-    except ValueError:
-        st.write("Invalid code: 'using' or '}' not found.")
-
 def get_class_name_from_code(code_string):
     # Extract the class name from the code string using regex
     match = re.search(r'public class (\w+)', code_string)
@@ -40,20 +32,18 @@ def get_class_name_from_code(code_string):
     return "generated_script" 
 
 def create_and_download_cs_file(code_string):
-    code_string = edit_code_string(code_string)
     class_name = get_class_name_from_code(code_string)
-    file_name = f"generated_scripts/{class_name}.cs"
-    with open(file_name, "w", encoding="utf-8") as file:
+    file_name = f"{class_name}.cs"
+    file_path = f"agent_generated_scripts/{file_name}"
+    with open(file_path, "w", encoding="utf-8") as file:
         file.write(code_string)
-    
-    with open(file_name, "rb") as file:
+    with open(file_path, "rb") as file:
         btn = st.download_button(
             label="Download .cs file",
             data=file,
             file_name=file_name,
             mime='text/plain',
         )
-
     if btn:
         os.remove(file_name)
 

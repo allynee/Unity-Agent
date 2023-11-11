@@ -164,14 +164,14 @@ def get_class_name_from_code(code_string):
 
 def create_and_download_cs_file(code_string):
     code_string = edit_code_string(code_string)
-    code_string = "using UnityEngine;\nusing UnityEngine.Events;\nusing UnityEngine.XR.Interaction.Toolkit;\nusing System;\nusing System.Collections.Generic;\nusing Enums;\n\n" + code_string
+    code_string = "using UnityEngine;\nusing UnityEngine.Events;\nusing UnityEngine.XR.Interaction.Toolkit;\nusing System;\nusing System.Collections.Generic;\nusing Enums;\nusing UnityEngine.AI;\n\n" + code_string
     class_name = get_class_name_from_code(code_string)
     file_name = f"{class_name}.cs"
-    file_path = f"generated_scripts/{file_name}"
+    file_path = f"baseline_generated_scripts/{file_name}"
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(code_string)
     
-    with open(file_name, "rb") as file:
+    with open(file_path, "rb") as file:
         btn = st.download_button(
             label="Download .cs file",
             data=file,

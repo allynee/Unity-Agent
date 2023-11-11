@@ -14,7 +14,6 @@ def get_script(task, plan, functions):
 	coder = A.Coder()
 	output = coder._generate_script(task=task, plan=plan, functions=functions)
 	st.write(output)
-	print(output)
 
 st.title("Testing code agent 🤖")
 

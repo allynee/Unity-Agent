@@ -1,7 +1,0 @@
-User query:
-Make the table glow as bright as possible
-
-Plan:
-1. Find a “Table” object in the scene. If there are no "Table" objects found, create a new object of type "Table"
-2. Edit the Illumination property of the Table to true
-3. Edit the Luminous Intensity property of the Table to the maximum of 10 

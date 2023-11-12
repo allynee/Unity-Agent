@@ -27,6 +27,7 @@ class Planner:
         - Your instructions must translate subjective terms like "big" or "close to me" into quantifiable measures, like “2 times its current size” and  “0.2m away from the user” respectively. 
         - For colors, use RGBA values.
         - When citing these quantitative measures, prioritize relative measurements derived from the user, objects, or scene. Avoid arbitrary values.
+        - The first instruction should be to either create a new object, or to find an existing object in the user's field of view.
         
         The space consists of 4 walls, 1 ceiling, and 1 floor.
         

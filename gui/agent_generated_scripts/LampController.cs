@@ -8,12 +8,13 @@ using UnityEngine.AI;
 
 public class LampController : SceneAPI
 {       
-    private Object3D lamp; // Class-level variable to maintain the lamp object state
+    private Object3D userLamp;
 
     private void Start()
     {
         CreateLamp();
-        EditLampPositionInFrontOfUser();
+        ChangeLampColorToBlue();
+        PlaceLampOnTableInView();
         ResizeLamp();
     }
 
@@ -23,53 +24,67 @@ public class LampController : SceneAPI
         Vector3D userFeetPosition = GetUsersFeetPosition();
         
         // Create the lamp
-        lamp = CreateObject("NewLamp", "Lamp", userFeetPosition, new Vector3D(0, 0, 0));
+        userLamp = CreateObject("UserLamp", "Lamp", userFeetPosition, new Vector3D(0, 0, 0));
     }
 
-    private Vector3D CalculatePositionInFrontOfUser(float distance)
+    public void ChangeLampColorToBlue()
     {
-        Vector3D userFeetPosition = GetUsersFeetPosition();
-        Vector3D userOrientation = GetUserOrientation();
-        return new Vector3D(
-            userFeetPosition.x + userOrientation.x * distance,
-            userFeetPosition.y,
-            userFeetPosition.z + userOrientation.z * distance
-        );
-    }
-
-    public void EditLampPositionInFrontOfUser()
-    {
-        lamp = FindObject3DByName("Lamp");
-        if (lamp == null)
+        if (userLamp == null)
         {
-            Debug.LogError("Lamp not found in the scene.");
-            return;
+            Vector3D positionToCreateLamp = GetUsersFeetPosition(); 
+            userLamp = CreateObject("UserLamp", "Lamp", positionToCreateLamp, new Vector3D(0, 0, 0));
         }
+        // Set the color of the lamp to blue
+        userLamp.SetColor(new Color3D(0, 0, 1, 1)); // RGBA for blue color
+    }
 
-        Vector3D newPosition = CalculatePositionInFrontOfUser(0.2f);
-        lamp.SetPosition(newPosition);
+    public void PlaceLampOnTableInView()
+    {
+        // Get all objects in the user's field of view
+        List<Object3D> objectsInView = GetAllObject3DsInFieldOfView();
+
+        // Find the first table in the user's field of view
+        Object3D table = objectsInView.Find(obj => obj.GetType().Equals("Table"));
+
+        if (table != null)
+        {   
+            Debug.Log("Found a table to put the lamp on!");
+            // Get the position and size of the table
+            Vector3D tablePosition = table.GetPosition();
+            Vector3D tableSize = table.GetSize();
+            float tableHeight = tableSize.y;
+
+            // Get the size of the lamp
+            Vector3D lampSize = userLamp.GetSize();
+            float lampHeight = lampSize.y;
+
+            Vector3D lampPosition = new Vector3D(tablePosition.x, tablePosition.y + tableHeight + (lampHeight / 2), tablePosition.z); 
+            Debug.Log("Lamp position: " + lampPosition.x + ", " + lampPosition.y + ", " + lampPosition.z);
+
+            // Set the new position for the lamp
+            userLamp.SetPosition(lampPosition);
+        }
+        else
+        {
+            Debug.LogWarning("No table found in the user's field of view.");
+        }
     }
 
     public void ResizeLamp()
     {
-        // Find the lamp object
-        lamp = FindObject3DByName("Lamp");
-        if (lamp == null)
+        if (userLamp == null)
         {
-            Debug.LogError("Lamp not found in the scene.");
+            Debug.LogError("Lamp doesn't exist. Create it first before resizing it.");
             return;
         }
 
         // Get the current size of the lamp
-        Vector3D currentSize = lamp.GetSize();
+        Vector3D lampSize = userLamp.GetSize();
 
-        // Calculate the new size based on the given instructions
-        float newScale = 0.8f; // 0.8 times of its original size
-        float newYScale = 0.5f; // 0.5 times its current size on the Y-axis
+        // Calculate the new size of the lamp (1.2 times of its original size)
+        Vector3D newLampSize = new Vector3D(lampSize.x * 1.2f, lampSize.y * 1.2f, lampSize.z * 1.2f);
 
-        Vector3D newSize = new Vector3D(currentSize.x * newScale, currentSize.y * newYScale, currentSize.z * newScale);
-
-        // Set the new size for the lamp
-        lamp.SetSize(newSize);
+        // Apply the new size to the lamp
+        userLamp.SetSize(newLampSize);
     }
 }

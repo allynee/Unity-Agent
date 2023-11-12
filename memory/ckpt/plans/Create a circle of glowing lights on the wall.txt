@@ -3,5 +3,6 @@ Create a circle of glowing lights on the wall
 
 Plan:
 1. Create ten new objects of type “LED Cube” 
-2. Edit the Position property of the array of LED cubes so they form a circle on the wall in front of the user 
-3. Edit the Illumination property of the array of LED cubes to change every 2 seconds.
+2. Get information about the wall that the user is facing
+3. Edit the Position property of the array of LED cubes so they form a circle on the wall
+4. Continuously edit the Illumination property of the array of LED cubes to change every 1 second

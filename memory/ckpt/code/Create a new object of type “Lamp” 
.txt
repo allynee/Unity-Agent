@@ -1,0 +1,21 @@
+Instruction:
+Create a new object of type “Lamp” 
+
+
+Code:
+private Object3D userLamp;
+
+private void Start()
+{
+    CreateLamp();
+}
+
+public void CreateLamp()
+{
+    // Default spawn lamp at the user's feet
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+    
+    // Create the lamp
+    userLamp = CreateObject("UserLamp", "Lamp", userFeetPosition, new Vector3D(0, 0, 0));
+}
+

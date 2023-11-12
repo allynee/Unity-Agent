@@ -1,0 +1,44 @@
+Instruction:
+Continuously check if the Fox is more than 1.5 meters away from the user with a Boolean variable. If true, update the Fox's NavMeshAgent's destination to a point 0.5 meters in front of the user's current orientation
+
+
+Code:
+private Object3D foxObject3D;
+private GameObject foxGameObject;
+private NavMeshAgent navMeshAgent;
+
+private void Update()
+{
+    if (navMeshAgent!=null && foxObject3D!=null){
+        MoveFoxToUser();
+    }else{
+        foxObject3D = FindObject3DByName("Fox");
+        foxGameObject = foxObject3D.ToGameObject();
+        navMeshAgent = foxGameObject.GetComponent<NavMeshAgent>();
+    }
+}
+
+public void MoveFoxToUser()
+{
+    // Get the user's current feet position and orientation.
+    Vector3D userFeetPosition3D = GetUsersFeetPosition();
+    Vector3D userOrientation3D = GetUserOrientation();
+    // Important: convert to a Vector3 type for calculations later
+    Vector3 userFeetPosition = userFeetPosition3D.ToVector3();
+    Vector3 userOrientation = userOrientation3D.ToVector3();
+
+    // Calculate fox's destination position to be 0.5 meters in front of the user.
+    // Use Vector3 to calculate the destination position.
+    Vector3 destination = userFeetPosition + userOrientation * 0.5f;
+
+    // Check the distance between the fox and the destination
+    // Vector3D does not have a Distance method, so we convert to Vector3 first.
+    float distanceToUser = Vector3.Distance(foxObject3D.transform.position, destination);
+
+    // If the user is more than 0.7 meters away, the fox should walk towarsd the user.
+    bool shouldMoveTowardsUser= distanceToUser > 0.7f;
+
+    if (shouldMoveTowardsUser){
+        navMeshAgent.SetDestination(destination);
+    }
+}

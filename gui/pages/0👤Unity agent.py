@@ -97,13 +97,15 @@ def generate_initial_script(task):
 
 def refine_plan_pipeline(feedback):
     ss.generated_output.feedback = feedback
-    st.markdown("## Original Plan:")
+    st.markdown("## Previous Plan:")
     st.write("\n\n".join(ss.generated_output.plan))
-    new_plan = ss.critic._refine_plan(ss.generated_output)
+    new_plan_examples = ss.memorymanager._get_plan(ss.generated_output.task + feedback)
+    new_plan = ss.critic._refine_plan(ss.generated_output, new_plan_examples)
     st.markdown("## New Plan:")
     st.write(new_plan)
     new_plans = new_plan.split("\n")
     new_plans = [plan for plan in new_plans if plan.strip()]
+    ss.generated_output.plan = new_plans
     plan_function_map = {}
     st.markdown("## Generating New Functions...")
     for plan in new_plans:
@@ -118,12 +120,15 @@ def refine_plan_pipeline(feedback):
             plan_function_map[cleaned_instruction] = function
             st.markdown("New function: \n```csharp\n" + function)
     new_functions = list(plan_function_map.values())
+    ss.generated_output.functions = new_functions
     script = ss.coder._generate_script(task, new_plan, new_functions)
+    ss.generated_output.script = script
     st.markdown("## Here is the newly generated script!")
     st.markdown("```csharp\n" + script)
     st.markdown("\n\n## Download the script here:")
     create_and_download_cs_file(script)
     ss.generated_output.new_plan_function_map = plan_function_map
+    ss.generated_output.old_plan_function_map = plan_function_map
     st.markdown("\n\n## The stored object:")
     st.write(ss.generated_output)
 

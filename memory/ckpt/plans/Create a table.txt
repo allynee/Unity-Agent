@@ -1,5 +1,0 @@
-User query:
-Create a table
-
-Plan:
-1. Create a new object of type "Table"

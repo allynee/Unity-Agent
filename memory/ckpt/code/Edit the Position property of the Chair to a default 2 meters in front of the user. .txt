@@ -1,0 +1,71 @@
+Instruction:
+Edit the Position property of the Chair to a default 2 meters in front of the user. 
+
+Code:
+private Object3D userChair;
+
+private void Start()
+{
+    PositionChairInFrontofUser();
+}
+
+public void PositionChairInFrontofUser(){
+    if (userChair== null)
+    {
+        Vector3D positionToCreateChair = GetUsersFeetPosition(); 
+        userChair = CreateObject("UserChair", "Chair", positionToCreateChair, new Vector3D(0, 0, 0));
+    }   
+    // Get the user's feet position and orientation
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+    Vector3D userOrientation = GetUserOrientation();
+    
+    // Assume a default 2m in front, but adjust based on objects and walls.
+    float defaultDistance = 2.0f;
+
+    // Convert user feet position to Vector3 for distance calculations.
+    Vector3 unityUserFeetPos = userFeetPosition.ToVector3();
+
+    float minDistance = defaultDistance;
+
+    // Get all objects in the field of view.
+    var objectsInView = GetAllObject3DsInFieldOfView();
+
+    // Check each object in the field of view to find the minimum distance
+    foreach (var obj in objectsInView)
+    {   
+        // Do not account for object you are trying to move
+        if (obj.name!="UserChair"){
+            Vector3 objectPosition = obj.GetPosition().ToVector3();
+            float distance = Vector3.Distance(new Vector3(objectPosition.x, unityUserFeetPos.y, objectPosition.z), unityUserFeetPos);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+            }
+        }
+    }
+
+    // Check all wall positions to find the closest distance
+    foreach (WallName wall in Enum.GetValues(typeof(WallName)))
+    {
+        Vector3D wallPosition = GetWallPosition(wall);
+        Vector3 unityWallPosition = wallPosition.ToVector3();
+        float wallDistance = Vector3.Distance(new Vector3(unityWallPosition.x, unityUserFeetPos.y, unityWallPosition.z), unityUserFeetPos);
+        if (wallDistance < minDistance)
+        {
+            minDistance = wallDistance;
+        }
+    }
+
+    // Ensure the chair is not placed too close to the user or objects
+    minDistance = Mathf.Max(minDistance - 0.1f, 0.1f); // Use 0.1m offset
+
+    // Calculate the new spawn position based on the minimum distance found
+    Vector3D spawnPosition = new Vector3D(
+        userFeetPosition.x + userOrientation.x * minDistance,
+        userFeetPosition.y,
+        userFeetPosition.z + userOrientation.z * minDistance
+    );
+
+    // Set the position of the chair
+    userChair.SetPosition(spawnPosition);
+}

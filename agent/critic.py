@@ -28,7 +28,7 @@ class Critic:
         guidance.llm = guidance.llms.OpenAI(model_name, temperature=temperature)
         self.llm=guidance.llm
     
-    def _refine_plan(self, output_object):
+    def _refine_plan(self, output_object, examples):
         # Generate new plan, only changing where necessary
         refiner = guidance('''
         {{#system~}}
@@ -50,6 +50,9 @@ class Critic:
             - If the feedback is to make an object "shorter", modify the size instruction to specify exact measurements, such as explicitly stating to adjust the X and Z axis with the original stretch factor but modify the Y axis' stretch factor (e.g., reduce to only 0.5 times its current size).
             - If the request is to move an object "closer to me", adjust the position instruction to be an added 0.2m closer to the user" or an appropriate relative distance.
         
+        Here are examples of similar instructions which may or may not be applicable to you.
+        \n {{examples}}
+                           
         The format for the revised plan should be:
         1. [Revised or original instruction 1]\n
         2. [Revised or original instruction 2]\n
@@ -61,7 +64,7 @@ class Critic:
         {{gen "new_steps" max_tokens=1000 temperature=0}}
         {{/assistant}}
         ''')
-        resp = refiner(output_object=output_object)
+        resp = refiner(output_object=output_object, examples=examples)
         return resp["new_steps"]
 
 

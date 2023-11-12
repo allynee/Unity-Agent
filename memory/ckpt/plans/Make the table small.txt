@@ -1,6 +1,0 @@
-User query:
-Make the table small
-
-Plan:
-1. Find a “Table” object in the scene. If there are no "Table" objects found, create a new object of type "Table"
-2. Edit the Size property of the Table to be 0.5 times of its current size

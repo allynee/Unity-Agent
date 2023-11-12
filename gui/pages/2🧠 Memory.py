@@ -47,7 +47,7 @@ def get_code(instruction):
 	code_list = memorymanager._get_code(instruction)
 	for i, c in enumerate(code_list):
 		st.markdown(f"### Retrieved Code {i+1}")
-		st.markdown(f"- Instruction: {c['instruction']}\n\n- Category: {c['category']}\n\n- Code:\n\n{c['code']}")
+		st.markdown(f"- Instruction: {c['instruction']}\n\n- Code:\n\n{c['code']}")
 		st.write("====================")
 
 def get_plan(user_query):

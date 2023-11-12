@@ -1,0 +1,34 @@
+Instruction:
+Find a “Fox” object in the scene. If there are no "Fox" objects found, create a new object of type "Fox"
+
+
+Code:
+private Object3D foxObject3D;
+
+private void Start()
+{
+    CreateOrFindFox();
+}
+
+public void CreateOrFindFox()
+{
+    // Attempt to find the fox in the user's field of view first.
+    List<Object3D> objectsInView = GetAllObject3DsInScene();
+    foxObject3D = objectsInView.Find(obj => obj.GetType().Equals("Fox"));
+
+    // If the fox is not found in the field of view, find it in the scene.
+    if (foxObject3D == null){
+        Debug.Log("Fox not found in user's field of view.")
+        foxObject3D = FindObject3DByName("Fox");
+        Debug.Log("Fox found in the scene.")
+    }
+    
+    // If there are no foxes in the scene, create one.
+    if (foxObject3D == null)
+    {
+        Debug.Log("Fox not found in the scene.");
+        Vector3D positionToCreateFox = GetUsersFeetPosition(); 
+        foxObject3D = CreateObject("UserFox", "Fox", positionToCreateFox, new Vector3D(0, 0, 0));
+        Debug.Log("Fox created in the scene.");
+    }   
+}

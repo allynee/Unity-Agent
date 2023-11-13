@@ -160,13 +160,13 @@ class Coder:
         Follow these steps:
         1. Develop a public class inheriting from SceneAPI with a name relevant to the task context.
         2. Integrate and modify function templates to maintain script coherence. 
-        3. Use class-level variables to maintain state across methods.
-        4. Consistently use the same object references across all methods. 
-        If an object is initialized (e.g., private Object3D classMember;), always use this reference for any related operations to ensure accurate and intended object manipulation.
-        5. Use Debug.Log statements for action logging and error handling.
-        6. Adhere strictly to standard C# methods and conventions.
-        7. Add comments to your code to explain your thought process.
-        8. All methods should be called under either Start() or Update().
+        3. Maintain consistent state and object references across methods. 
+        - Utilize class-level variables (e.g., private Object3D classMember;) to preserve state throughout the class.
+        - Ensure that the same object references are used in every method. Once an object is initialized, consistently use this reference in all related operations. This practice ensures that manipulations are accurately and intentionally applied to the correct instance.
+        4. Use Debug.Log statements for action logging and error handling.
+        5. Adhere strictly to standard C# methods and conventions.
+        6. Add comments to your code to explain your thought process.
+        7. All methods should be called under either Start() or Update().
 
         Your format for responses should strictly be: 
         ```
@@ -195,7 +195,7 @@ class Coder:
             // And so on... The number of methods will depend on the user's request. 
         }
         ```
-        *Note: Output should not contain any text other than script containing method(s).*
+        *Note: Output should not contain any text other than script containing method(s). You must give the full code within the methods*
         {{~/user}}
         {{#assistant~}}
         {{gen "script" temperature=0 max_tokens=4096}}

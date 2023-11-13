@@ -12,7 +12,6 @@ class Planner:
         guidance.llm = guidance.llms.OpenAI(model_name, temperature=temperature)
         self.llm=guidance.llm
 
-    #TODO: Create plan function. Separate each point with new line character \n
     def _generate_plan(self, task, examples):
         planner = guidance('''
         {{#system~}}
@@ -24,7 +23,7 @@ class Planner:
         - Each instruction should modify only 1 property or behaviour.
         - If you need to edit the position of more than one object, include it within a single instruction. For example, use "Edit the Position property of each chair to be 0.5 meters in front of each room wall" instead of separate instructions for each chair.
         - Properties that can be edited are: Position, Rotation, Size, Color, Illumination (Whether the object emanates light), Luminous Intensity (Brightness of the light between 1 and 10), Levitation (When an object is not levitated, it follows the rules of gravity, and when levitated, it floats). 
-        - Your instructions must translate subjective terms like "big" or "close to me" into quantifiable measures, like “2 times its current size” and  “0.2m away from the user” respectively. 
+        - Your instructions must translate subjective terms into specific, measurable instructions. For example, terms like "big" or "close to me" can translate to “2 times its current size” and  “0.2m away from the user” respectively. Always cite explicit numbers.
         - For colors, use RGBA values.
         - When citing these quantitative measures, prioritize relative measurements derived from the user, objects, or scene. Avoid arbitrary values.
         - The first instruction should be to either create a new object, or to find an existing object in the user's field of view.

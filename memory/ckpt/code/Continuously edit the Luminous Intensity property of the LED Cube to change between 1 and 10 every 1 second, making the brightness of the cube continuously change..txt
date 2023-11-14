@@ -1,0 +1,64 @@
+Instruction:
+Continuously edit the Luminous Intensity property of the LED Cube to change between 1 and 10 every 1 second, making the brightness of the cube continuously change.
+
+Code:
+// Declare private fields to track the LED Cube object and its luminous intensity
+private Object3D ledCube;
+private float luminousIntensity = 1.0f;
+private float changeInterval = 1.0f;
+private float timeSinceLastChange = 0.0f;
+
+public void Start()
+{
+    // Find the LED Cube in the scene
+    ledCube = FindObject3DByName("LED Cube");
+
+    // Check if the LED Cube exists
+    if (ledCube == null)
+    {
+        Debug.LogError("LED Cube not found in the scene.");
+        return;
+    }
+
+    // Set the initial luminous intensity of the LED Cube
+    ledCube.SetLuminousIntensity(luminousIntensity);
+}
+
+public void Update()
+{
+    // Increase the time since the last change by the time passed since the last frame
+    timeSinceLastChange += Time.deltaTime;
+
+    // Check if it's time to change the luminous intensity
+    if (timeSinceLastChange >= changeInterval)
+    {
+        // Reset the time since the last change
+        timeSinceLastChange = 0;
+
+        // Change the luminous intensity of the LED Cube
+        ChangeLuminousIntensity();
+    }
+}
+
+public void ChangeLuminousIntensity()
+{
+    // Check if the LED Cube exists
+    if (ledCube == null)
+    {
+        Debug.LogError("LED Cube not found in the scene.");
+        return;
+    }
+
+    // Change the luminous intensity between 1 and 10
+    if (luminousIntensity == 1.0f)
+    {
+        luminousIntensity = 10.0f;
+    }
+    else
+    {
+        luminousIntensity = 1.0f;
+    }
+
+    // Set the new luminous intensity of the LED Cube
+    ledCube.SetLuminousIntensity(luminousIntensity);
+}

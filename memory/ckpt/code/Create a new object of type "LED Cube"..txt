@@ -1,0 +1,18 @@
+Instruction:
+Create a new object of type "LED Cube".
+
+Code:
+// Declare the LED Cube object
+private Object3D ledCube;
+
+public void CreateLEDCube()
+{
+    // Get the user's feet position
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+
+    // Create the LED Cube at the user's feet position
+    ledCube = CreateObject("UserLEDCube", "LED Cube", userFeetPosition, new Vector3D(0, 0, 0));
+
+    // Log the creation of the LED Cube
+    Debug.Log("LED Cube created at user's feet position");
+}

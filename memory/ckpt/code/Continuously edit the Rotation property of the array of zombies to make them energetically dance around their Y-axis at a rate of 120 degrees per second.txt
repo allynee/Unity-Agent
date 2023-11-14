@@ -1,0 +1,44 @@
+Instruction:
+Continuously edit the Rotation property of the array of zombies to make them energetically dance around their Y-axis at a rate of 120 degrees per second
+
+Code:
+private Object3D[] zombies;
+
+private void Start()
+{
+    // Find all zombies in the scene
+    List<Object3D> allObjects = GetAllObject3DsInScene();
+    zombies = allObjects.Where(obj => obj.GetType() == "Zombie").ToArray();
+
+    // Check if any zombies were found
+    if (zombies.Length == 0)
+    {
+        Debug.LogError("No zombies found in the scene.");
+    }
+}
+
+private void Update()
+{
+    // Check if any zombies were found
+    if (zombies.Length == 0)
+    {
+        Debug.LogError("No zombies found in the scene.");
+        return;
+    }
+    RotateZombiesAroundYAxis();
+}
+
+public void RotateZombiesAroundYAxis()
+{
+    foreach (Object3D zombie in zombies)
+    {
+        // Get the current rotation of the zombie
+        Vector3D currentRotation = zombie.GetRotation();
+
+        // Calculate the new rotation around the Y-axis
+        float newYRotation = currentRotation.y + 120 * Time.deltaTime;
+
+        // Set the new rotation of the zombie
+        zombie.SetRotation(new Vector3D(currentRotation.x, newYRotation, currentRotation.z));
+    }
+}

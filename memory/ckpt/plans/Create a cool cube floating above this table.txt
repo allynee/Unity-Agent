@@ -1,0 +1,12 @@
+User query:
+Create a cool cube floating above this table
+
+Plan:
+1. Create a new object of type "LED Cube".
+2. Edit the Position property of the LED Cube to be directly above the center of the table in the user's field of view.
+3. Edit the Levitation property of the LED Cube to true, allowing it to float.
+4. Edit the Position property of the LED Cube to be 1 meter above its current position, ensuring it is floating above the table.
+5. Edit the Color property of the LED Cube to a pink color with RGBA(1, 0, 0.5, 1), giving it a pink hue.
+6. Edit the Rotation property of the LED Cube to continuously rotate around its Y-axis at a rate of 45 degrees per second, making it spin around.
+7. Edit the Illumination property of the LED Cube to true, allowing it to emit light.
+8. Continuously edit the Luminous Intensity property of the LED Cube to change between 1 and 10 every 1 second, making the brightness of the cube continuously change.

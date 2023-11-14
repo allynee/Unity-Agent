@@ -1,0 +1,30 @@
+Instruction:
+Continuously edit the Illumination property of the array of LED cubes to change every 1 second, and change the Color property of each LED cube to a new randomly generated RGBA value at the same interval to create a dynamic light show
+
+Code:
+// Declare private fields to track the array of LED cubes and the time since last color change
+private List<Object3D> ledCubes = new List<Object3D>();
+private float colorChangeInterval = 1.0f;
+private float timeSinceLastColorChange = 0.0f;
+ 
+// Method to continuously edit the Illumination property of the array of LED cubes to change every 1 second
+public void EditLEDsIllumination()
+{
+    timeSinceLastColorChange += Time.deltaTime;
+
+    if (timeSinceLastColorChange >= colorChangeInterval)
+    {
+        timeSinceLastColorChange = 0;
+
+        // Change the color and illumination of each LED cube
+        foreach (Object3D ledCube in ledCubes)
+        {
+            // Generate a new random RGBA color
+            Color3D newColor = new Color3D(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+            ledCube.SetColor(newColor);
+
+            // Toggle the illumination state
+            ledCube.Illuminate(!ledCube.IsLit());
+        }
+    }
+}

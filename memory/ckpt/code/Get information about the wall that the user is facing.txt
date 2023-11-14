@@ -6,10 +6,6 @@ private GameObject wallObject;
 private Vector3 wallSize;
 private Vector3 wallCenter;
 
-private void Start(){
-    GetClosestWallInfo();
-}
-
 public void GetClosestWallInfo()
 {
     Vector3D userHeadPosition = GetUsersHeadPosition();

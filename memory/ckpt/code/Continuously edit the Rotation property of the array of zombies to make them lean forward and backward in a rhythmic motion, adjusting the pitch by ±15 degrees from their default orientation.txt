@@ -1,0 +1,45 @@
+Instruction:
+Continuously edit the Rotation property of the array of zombies to make them lean forward and backward in a rhythmic motion, adjusting the pitch by ±15 degrees from their default orientation
+
+Code:
+private List<Object3D> zombies;
+
+private void Start()
+{
+    // Find all zombies in the scene
+    zombies = GetAllZombiesInScene();
+    
+    // Check if any zombies were found
+    if (zombies.Count == 0)
+    {
+        Debug.LogError("No zombies found in the scene.");
+        return;
+    }
+}
+
+private void Update()
+{
+    // Check if any zombies were found
+    if (zombies.Count == 0)
+    {
+        Debug.LogError("No zombies found in the scene.");
+        return;
+    }
+
+    LeanZombiesRhythmically();
+}
+
+public void LeanZombiesRhythmically()
+{
+    foreach (Object3D zombie in zombies)
+    {
+        // Get the current rotation of the zombie
+        Vector3D currentRotation = zombie.GetRotation();
+
+        // Calculate the new rotation pitch within ±15 degrees
+        float newPitch = Mathf.Sin(Time.time) * 15; // Using sine function for rhythmic motion
+
+        // Set the new rotation of the zombie
+        zombie.SetRotation(new Vector3D(currentRotation.x, currentRotation.y, currentRotation.z + newPitch));
+    }
+}

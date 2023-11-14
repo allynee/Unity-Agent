@@ -1,0 +1,48 @@
+Instruction:
+Edit the Position property of the LED Cube to be directly above the center of the table in the user's field of view.
+
+Code:
+// Declare a private field to track the LED Cube
+private Object3D ledCube;
+
+public void PositionLEDCubeAboveTable()
+{
+    // Get all objects in the user's field of view
+    List<Object3D> objectsInView = GetAllObject3DsInFieldOfView();
+
+    // Find the first table in the user's field of view
+    Object3D table = objectsInView.Find(obj => obj.GetType().Equals("Table"));
+
+    // Check if the LED Cube exists before trying to move it
+    if (ledCube == null) 
+    {
+        Debug.LogWarning("No LED Cube found.");
+        return;
+    }
+
+    if (table != null)
+    {
+        Debug.Log("Found a table to put the LED Cube above!");
+
+        // Get the position and size of the table
+        Vector3D tablePosition = table.GetPosition();
+        Vector3D tableSize = table.GetSize();
+        float tableHeight = tableSize.y;
+
+        // Get the size of the LED Cube
+        Vector3D ledCubeSize = ledCube.GetSize();
+        float ledCubeHeight = ledCubeSize.y;
+
+        // Calculate the new position for the LED Cube to be directly above the center of the table
+        Vector3D ledCubePosition = new Vector3D(tablePosition.x, tablePosition.y + tableHeight + ledCubeHeight / 2, tablePosition.z); 
+
+        Debug.Log("LED Cube position: " + ledCubePosition.x + ", " + ledCubePosition.y + ", " + ledCubePosition.z);
+
+        // Set the new position for the LED Cube
+        ledCube.SetPosition(ledCubePosition);
+    }
+    else
+    {
+        Debug.LogWarning("No table found in the user's field of view.");
+    }
+}

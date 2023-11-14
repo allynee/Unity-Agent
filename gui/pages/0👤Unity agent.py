@@ -61,26 +61,59 @@ def clean_function_text(text):
     text = text.replace("```", "")          # Replace the ending string with nothing
     return text.strip()
 
+def get_plan(task):
+	planner = A.Planner()
+	memory_manager = A.MemoryManager()
+	examples = memory_manager._get_plan(task)
+	output = planner._generate_plan(task, examples)
+	return output
+
+def get_function(task):
+	coder = A.Coder()
+	memorymanager = A.MemoryManager()
+	function_examples = memorymanager._get_code(task)
+	output = coder._generate_function(task=task, examples=function_examples)
+	return output
+
+def get_function_with_examples(task, examples):
+    coder = A.Coder()
+    output = coder._generate_function(task=task, examples=examples)
+    return output
+
+def get_script(task, plan, functions):
+    coder = A.Coder()
+    output = coder._generate_script(task=task, plan=plan, functions=functions)
+    return output
+
+def refine_plan(output, new_examples):
+    critic = A.Critic()
+    new_plan = critic._refine_plan(output=output, new_examples=new_examples)
+    return new_plan
+
 def generate_initial_script(task):
     st.markdown(f"## Received your task to generate a script for: {task}")
     st.markdown("## Generating the plan...")
-    plan_examples = ss.memorymanager._get_plan(task)
-    plan = ss.planner._generate_plan(task, plan_examples)
+    plan = get_plan(task)
+    # plan_examples = ss.memorymanager._get_plan(task)
+    # plan = ss.planner._generate_plan(task, plan_examples)
     st.write(plan)
     plans = plan.split("\n")
+    plans = [plan for plan in plans if plan.strip()]
     plan_function_map = {}
     functions = []
     st.markdown("## Generating functions...")
     for plan in plans:
         st.write("Generating function for \n ```" + plan + "```")
-        function_examples = ss.memorymanager._get_code(plan)
-        function = ss.coder._generate_function(plan, function_examples)
+        function = get_function(plan)
+        # function_examples = ss.memorymanager._get_code(plan)
+        # function = ss.coder._generate_function(plan, function_examples)
         function = clean_function_text(function)
         functions.append(function)
         plan_function_map[remove_numbered_bullets(plan)] = function
         st.write("\n```csharp\n" + function + "\n\n")
     st.markdown("## Generating the entire script...")
-    script = ss.coder._generate_script(task, plan, functions)
+    # script = ss.coder._generate_script(task, plan, functions)
+    script = get_script(task, plan, functions)
     st.write("```csharp\n" + script)
     st.write("\n\nDownload the script here:")
     create_and_download_cs_file(script)
@@ -99,8 +132,10 @@ def refine_plan_pipeline(feedback):
     ss.generated_output.feedback = feedback
     st.markdown("## Previous Plan:")
     st.write("\n\n".join(ss.generated_output.plan))
-    new_plan_examples = ss.memorymanager._get_plan(ss.generated_output.task + feedback)
-    new_plan = ss.critic._refine_plan(ss.generated_output, new_plan_examples)
+    # new_plan_examples = ss.memorymanager._get_plan(ss.generated_output.task + feedback)
+    new_plan_examples = get_plan(ss.generated_output.task + feedback)
+    # new_plan = ss.critic._refine_plan(ss.generated_output, new_plan_examples)
+    new_plan = refine_plan(ss.generated_output, new_plan_examples)
     st.markdown("## New Plan:")
     st.write(new_plan)
     new_plans = new_plan.split("\n")
@@ -115,13 +150,15 @@ def refine_plan_pipeline(feedback):
         else:
             st.markdown("Generating a new function for \n ```" + plan + "```")
             function_examples = ss.memorymanager._get_code(cleaned_instruction)
-            function = ss.coder._generate_function(cleaned_instruction, function_examples)
+            # function = ss.coder._generate_function(cleaned_instruction, function_examples)
+            function = get_function_with_examples(cleaned_instruction, function_examples)
             function = clean_function_text(function)
             plan_function_map[cleaned_instruction] = function
             st.markdown("New function: \n```csharp\n" + function)
     new_functions = list(plan_function_map.values())
     ss.generated_output.functions = new_functions
-    script = ss.coder._generate_script(task, new_plan, new_functions)
+    # script = ss.coder._generate_script(task, new_plan, new_functions)
+    script = get_script(task, new_plan, new_functions)
     ss.generated_output.script = script
     st.markdown("## Here is the newly generated script!")
     st.markdown("```csharp\n" + script)
@@ -142,7 +179,8 @@ def add_new_experience():
         st.write("You have not generated any scripts yet!")
         return
     else:
-        plan, code = ss.memorymanager._add_new_experience(ss.generated_output)
+        memorymanager = A.MemoryManager()
+        plan, code = memorymanager._add_new_experience(ss.generated_output)
         st.write("Added new experience to memory!")
         st.write("Plan added:")
         st.write(plan)
@@ -152,6 +190,7 @@ def add_new_experience():
 st.title("Testing entire pipeline")
 ss = st.session_state
 if "generated_output" not in st.session_state:
+    print("Initializing session state...")
     ss.planner = A.Planner()
     ss.coder = A.Coder()
     ss.memorymanager = A.MemoryManager()

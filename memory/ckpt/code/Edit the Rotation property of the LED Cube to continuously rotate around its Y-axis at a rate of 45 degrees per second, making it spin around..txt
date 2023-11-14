@@ -1,0 +1,38 @@
+Instruction:
+Edit the Rotation property of the LED Cube to continuously rotate around its Y-axis at a rate of 45 degrees per second, making it spin around.
+
+Code:
+// Declare a private field to track the LED Cube
+private Object3D ledCube;
+
+public void Start()
+{
+    // Find the LED Cube in the scene
+    ledCube = FindObject3DByName("LED Cube");
+
+    // Check if the LED Cube was found
+    if (ledCube == null)
+    {
+        Debug.LogError("LED Cube not found in the scene.");
+        return;
+    }
+}
+
+public void Update()
+{
+    // Check if the LED Cube was found
+    if (ledCube == null)
+    {
+        Debug.LogError("LED Cube not found in the scene.");
+        return;
+    }
+
+    // Get the current rotation of the LED Cube
+    Vector3D currentRotation = ledCube.GetRotation();
+
+    // Calculate the new rotation around the Y-axis
+    float newYRotation = currentRotation.y + 45 * Time.deltaTime;
+
+    // Set the new rotation of the LED Cube
+    ledCube.SetRotation(new Vector3D(currentRotation.x, newYRotation, currentRotation.z));
+}

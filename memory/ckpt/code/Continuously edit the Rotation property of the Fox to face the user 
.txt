@@ -9,8 +9,6 @@ private void Update()
 {
     if (foxObject3D!=null){
         RotateFoxToFaceUser();
-    }else{
-        foxObject3D = FindObject3DByName("Fox");
     }
 }
 

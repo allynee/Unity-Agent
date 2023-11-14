@@ -1,0 +1,28 @@
+Instruction:
+Edit the Position property of the zombies to form a larger circle in the center of the room, with a radius of 3 meters.
+
+Code:
+private List<Object3D> zombies = new List<Object3D>();
+
+private void Start()
+{
+    ArrangeZombiesInCircle();
+}
+
+public void ArrangeZombiesInCircle()
+{
+    // Get the center position of the room
+    Vector3D roomCenter = new Vector3D(0, 0, 0);
+
+    // Calculate the positions for the zombies in a circle around the center
+    float radius = 3f;
+    int numZombies = zombies.Count;
+    for (int i = 0; i < numZombies; i++)
+    {
+        float angle = i * (2 * Mathf.PI / numZombies);
+        float x = roomCenter.x + radius * Mathf.Cos(angle);
+        float z = roomCenter.z + radius * Mathf.Sin(angle);
+        Vector3D zombiePosition = new Vector3D(x, 0, z);
+        zombies[i].SetPosition(zombiePosition);
+    }
+}

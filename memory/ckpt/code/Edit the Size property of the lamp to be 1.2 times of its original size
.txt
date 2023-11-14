@@ -22,8 +22,8 @@ public void EnlargeLampOnTable()
     Vector3D lampSize = userLamp.GetSize();
     Vector3D lampPosition = userLamp.GetPosition();
 
-    // Store the new ideal size of the lamp (assuming 1.2 times as per instruction)
-    const float idealScale = 1.2f;
+    // Store the new ideal size of the lamp (assuming 2.5 times as per instruction)
+    const float idealScale = 2.5f;
 
     // When enlarging the lamp, we need to consider the environment to ensure the lamp does not exceed the max possible size.
     // First, account for the table that the lamp is on for the max x & z size.

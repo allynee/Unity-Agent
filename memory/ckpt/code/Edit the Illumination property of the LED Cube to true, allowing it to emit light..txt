@@ -1,0 +1,24 @@
+Instruction:
+Edit the Illumination property of the LED Cube to true, allowing it to emit light.
+
+Code:
+// Declare a private field to track the LED Cube
+private Object3D ledCube;
+
+public void IlluminateLEDCube()
+{
+    // Find the LED Cube in the scene
+    ledCube = FindObject3DByName("LED Cube");
+
+    // Check if the LED Cube was found
+    if (ledCube == null)
+    {
+        Debug.LogError("LED Cube not found in the scene.");
+        return;
+    }
+
+    // Set the Illumination property of the LED Cube to true
+    ledCube.Illuminate(true);
+
+    Debug.Log("LED Cube is now illuminated.");
+}

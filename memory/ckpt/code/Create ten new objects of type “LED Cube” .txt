@@ -16,7 +16,7 @@ public void CreateTenLEDCubes()
     for (int i = 0; i < 10; i++)
     {
         // Create LED Cube at a default position
-        Object3D cube = CreateObject($"LEDCube_{i}", "LED Cube",new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
+        Object3D cube = CreateObject($"UserLEDCube_{i}", "LED Cube",new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
         ledCubes.Add(cube); 
     }
 }

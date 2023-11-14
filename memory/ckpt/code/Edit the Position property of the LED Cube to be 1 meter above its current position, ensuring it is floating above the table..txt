@@ -1,0 +1,39 @@
+Instruction:
+Edit the Position property of the LED Cube to be 1 meter above its current position, ensuring it is floating above the table.
+
+Code:
+// Declare the LED Cube object
+private Object3D ledCube;
+
+public void Start()
+{
+    // Find the LED Cube in the scene
+    ledCube = FindObject3DByName("LED Cube");
+
+    // If the LED Cube is found, lift it up
+    if (ledCube != null)
+    {
+        LiftLedCubeUp();
+    }
+    else
+    {
+        Debug.Log("LED Cube not found in the scene.");
+    }
+}
+
+public void LiftLedCubeUp()
+{
+    // Get the current position of the LED Cube
+    Vector3D cubePosition = ledCube.GetPosition();
+
+    // Set the new position to be 1 meter above the current position
+    Vector3D newPosition = new Vector3D(cubePosition.x, cubePosition.y + 1.0f, cubePosition.z);
+
+    // Set the LED Cube to levitate
+    ledCube.Levitate(true);
+
+    // Update the position of the LED Cube
+    ledCube.SetPosition(newPosition);
+
+    Debug.Log("LED Cube has been lifted up by 1 meter.");
+}

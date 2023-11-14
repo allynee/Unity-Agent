@@ -1,0 +1,21 @@
+Instruction:
+Create a new object of type “Chair”.
+
+
+Code:
+private Object3D userChair;
+
+private void Start()
+{
+    CreateChairAtUsersFeet();
+}
+
+public void CreateChairAtUsersFeet()
+{
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+    userChair = CreateObject("UserChair", "Chair", userFeetPosition, new Vector3D(0, 0, 0));
+    if (userChair == null)
+    {
+        Debug.LogError("Failed to create the chair.");
+    }
+}

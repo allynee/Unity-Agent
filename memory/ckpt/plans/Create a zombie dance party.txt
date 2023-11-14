@@ -1,0 +1,8 @@
+User query:
+Create a zombie dance party
+
+Plan:
+1. Create ten new objects of type "Zombie"
+2. Edit the Position property of the array of zombies to form a larger circle on the floor, with a radius of 3 meters
+3. Continuously edit the Rotation property of the array of zombies to make them energetically dance around their Y-axis at a rate of 120 degrees per second
+4. Continuously edit the Rotation property of the array of zombies to make them lean forward and backward in a rhythmic motion, adjusting the pitch by ±15 degrees from their default orientation

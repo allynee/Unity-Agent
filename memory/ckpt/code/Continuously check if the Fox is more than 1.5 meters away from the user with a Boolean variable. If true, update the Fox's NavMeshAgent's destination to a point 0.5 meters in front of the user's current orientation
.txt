@@ -11,10 +11,6 @@ private void Update()
 {
     if (navMeshAgent!=null && foxObject3D!=null){
         MoveFoxToUser();
-    }else{
-        foxObject3D = FindObject3DByName("Fox");
-        foxGameObject = foxObject3D.ToGameObject();
-        navMeshAgent = foxGameObject.GetComponent<NavMeshAgent>();
     }
 }
 

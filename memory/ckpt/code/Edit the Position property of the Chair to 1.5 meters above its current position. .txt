@@ -1,0 +1,21 @@
+Instruction:
+Edit the Position property of the Chair to 1.5 meters above its current position. 
+
+Code:
+private Object3D userChair;
+
+private void Start()
+{
+    LiftChairUp();
+}
+
+public void LiftChairUp()
+{
+    if (userChair!= null)
+    {
+        // Lift the chair by a given amount (e.g., 1.5 meters above the ground)
+        Vector3D chairPosition = userChair.GetPosition();
+        userChair.SetPosition(new Vector3D(chairPosition.x, chairPosition.y + 1.5f, chairPosition.z));
+    }   
+
+}

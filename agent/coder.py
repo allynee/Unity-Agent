@@ -36,8 +36,8 @@ class Coder:
         Use the provided system to manipulate the room.
                 
         Follow these steps:
-        1. Write a C# code that implements the task. Create private fields and methods to achieve this. 
-        2. Declare private fields above your method(s).
+        1. Write method(s) using C# code to implement the task.  
+        2. Declare private fields above your method(s) to track the object(s) you create and modify within the method. Ensure you always assign your object finding, creations, or modifications to these declared fields. If you are creating multiple objects, you can use a list to store them.
         3. Use Debug.Log statements for action logging and error handling.
         4. Adhere strictly to standard C# methods. 
         5. Add comments to your code to explain your thought process.
@@ -87,31 +87,36 @@ class Coder:
             public Vector3D GetWallPosition(WallName wallname)
             public List<Object3D> GetAllObject3DsInScene()
             public Object3D FindObject3DByName(string objName)
+            // To find an object you could do 
+            //  List<Object3D> objectsInView = GetAllObject3DsInFieldOfView();
+            //  Object3D desiredObj = objectsInView.Find(obj => obj.GetType().Equals("ObjType"));
             public bool IsObject3DInFieldOfView(Object3D obj)
-            public List<Object3D> GetAllObject3DsInFieldOfView()
+            public List<Object3D> GetAllObject3DsInFieldOfView() // This is good to get objects in the user's field of view. You can use this to find game objects referenced in the task. 
             public bool IsObjectTypeValid(string objectType)
             public List<string> GetAllValidObjectTypes()
             public Vector3D GetSceneSize()
             public Vector3D GetUserOrientation()
-            public Vector3D GetUsersHeadPosition()
+            public Vector3D GetUsersHeadPosition() // Not good for object creation and position movement methods, as the tall height will cause objects to topple
             public Vector3D GetUsersLeftHandPosition()
             public Vector3D GetUsersRightHandPosition()
             public Vector3D GetUsersLeftHandRotation()
             public Vector3D GetUsersRightHandRotation()
-            public Vector3D GetUsersFeetPosition()
+            public Vector3D GetUsersFeetPosition() //This is good for object creation and position movement methods
             public Object3D CreateObject(string newObjName, string objectType, Vector3D position, Vector3D rotation)
         }
 
         public class Vector3D
         {
+            // Vector3D cannot be used like Vector3. It only has the methods below. If you want to use Vector3 methods, convert it to Vector3 using ToVector3() first.
             public float x { get; set; }
             public float y { get; set; }
             public float z { get; set; }
             Vector3D(float x, float y, float z)
             public Vector3D ToVector3()
             public Vector3D FromVector3(Vector3 vec)
-        }
-
+        } // To add 2 vector 3Ds, use new Vector3D(vec1.x + vec2.x, vec1.y + vec2.y, vec1.z + vec2.z) Same logic for subtract
+        //When using NavMeshAgent, make sure to convert all Vector3Ds to Vector3s using ToVector3() before using them in the NavMeshAgent methods.
+        // When performing calculations like multiplication, remember to convert all your Vector3Ds to Vector3s using ToVector3() before performing the calculations.
         public class Color3D
         {
             //All values below range from 0 to 1 
@@ -124,11 +129,23 @@ class Coder:
         ```
         The task to create a function for is: {{task}}. 
                                 
-        Here are examples of similar functions which may or may not be applicable to your task:\n {{examples}}
+        When presented with the task of creating a function, your first step is to compare the current task with the provided examples of similar past functions. If you find that the current task closely matches one of these examples, your function should be heavily modeled after the past example. This means using a similar structure, logic, and syntax, adapting only the necessary parts to suit the specifics of the new task.
+        In cases where there is no close match among the examples, you should then craft a new function by integrating elements from those examples that are most relevant to the current task. This process involves synthesizing the logic, structure, and approach from the examples to create a function that effectively addresses the new task.
+        Remember, the goal is to maintain the effectiveness and consistency of past successful functions. Use them as blueprints for your responses, ensuring that similar tasks yield similar, proven results.
+        
+        Examples:\n {{examples}}
                 
         Your format for responses should strictly be: 
                          
-        // All class members should be declared here
+        // All class members should be declared here. 
+        
+        private void Start(){
+            // Insert method(s) that only need to be called once
+        }
+                         
+        private void Update(){
+            // If method(s) that need to be called repeatedly
+        }
                          
         public void Method1()
         {
@@ -136,7 +153,7 @@ class Coder:
         }
         // And so on... The number of methods will depend on the user's request. 
 
-        *Note: Output should not contain any text other than the class members and method(s).*
+        *Note: Output should not contain any text other than the class members and method(s). You must give the full code within the methods*
         {{~/user}}
         {{#assistant~}}
         {{gen "function" temperature=0 max_tokens=4096}}
@@ -146,6 +163,7 @@ class Coder:
         return resp["function"]
          
     def _generate_script(self, task, plan, functions):
+        guidance.llm = guidance.llms.OpenAI("gpt-4-0613")
         coder = guidance('''
         {{#system~}}
         You are a skilled C# developer tasked with crafting a coherent C# script, ensuring that created objects and states are managed and utilized effectively across multiple methods.
@@ -153,37 +171,42 @@ class Coder:
         {{#user~}}
         User Task: {{task}}
         
-        Actionable instructions to fulfil the user task: {{plan}}
+        Actionable Instructions to fulfil the user task: {{plan}}
                                 
-        Function Templates: {{functions}}
+        Methods for each step of the actionable plan: {{functions}}
                 
         Follow these steps:
         1. Develop a public class inheriting from SceneAPI with a name relevant to the task context.
-        2. Integrate and modify function templates to maintain script coherence. 
-        3. Maintain consistent state and object references across methods. 
-        - Utilize class-level variables (e.g., private Object3D classMember;) to preserve state throughout the class.
-        - Ensure that the same object references are used in every method. Once an object is initialized, consistently use this reference in all related operations. This practice ensures that manipulations are accurately and intentionally applied to the correct instance.
-        4. Use Debug.Log statements for action logging and error handling.
-        5. Adhere strictly to standard C# methods and conventions.
-        6. Add comments to your code to explain your thought process.
-        7. All methods should be called under either Start() or Update().
+        2. You must use all methods in your final script. The only method(s) and/or code you are permitted to remove are methods that repeat creating or finding object(s).
+        3. Integrate and modify the methods to maintain script coherence. 
+        4. Utilize class-level variables (e.g., private Object3D classMember;) to preserve state throughout the class.
+        5. Remove duplicate variables referencing the same object(s).
+        6. Ensure that the same object references are used in every method. Once an object is initialized, consistently use this reference in all related operations. 
+        7. For each method, do not use FindObject3DByName() or CreateObject() to re-assign the same object(s). Always check if there is the same object reference that was initialized in previous methods.
+        8. Use Debug.Log statements for action logging and error handling.
+        9. Adhere to standard C# methods and conventions and add comments to your code to explain your thought process.
+        10. All methods should be called under either Start() or Update().
 
         Your format for responses should strictly be: 
         ```
         public class YourChosenClassName : SceneAPI
         {	
-            // Add any needed class members here
+            // All class members and constants should be declared here. 
+            // Remember to remove duplicate variables referencing the same object(s)
+            // Remember to call the final correct variable names across all methods
             
             private void Start()
                 {
                     Method1();
                     Method2();
-                    // And so on... The number of methods will depend on the user's request.
+                    // And so on... The number of methods will depend on the user's request. 
                 }
             private void Update()
                 {
-                    // Insert the methods here if needed
+                    Method3();
+                    // And so on... The number of methods will depend on the user's request.
                 }
+                         
             public void Method1()
                 {
                     // Insert the method code here
@@ -195,7 +218,7 @@ class Coder:
             // And so on... The number of methods will depend on the user's request. 
         }
         ```
-        *Note: Output should not contain any text other than script containing method(s). You must give the full code within the methods*
+        *Note: Output should not contain any text other than script containing method(s). You must give the full code within the methods.*
         {{~/user}}
         {{#assistant~}}
         {{gen "script" temperature=0 max_tokens=4096}}
@@ -204,7 +227,7 @@ class Coder:
         resp = coder(task=task, plan=plan, functions=functions)
         script = resp["script"]
         script = edit_code_string(script)
-        script = "using UnityEngine;\nusing UnityEngine.Events;\nusing UnityEngine.XR.Interaction.Toolkit;\nusing System;\nusing System.Collections.Generic;\nusing Enums;\nusing UnityEngine.AI;\n\n" + script
+        script = "using UnityEngine;\nusing UnityEngine.Events;\nusing UnityEngine.XR.Interaction.Toolkit;\nusing System;\nusing System.Collections.Generic;\nusing Enums;\nusing UnityEngine.AI;\nusing System.Linq;\n\n" + script
         return script
     
 def edit_code_string(code_string):

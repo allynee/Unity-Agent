@@ -1,0 +1,37 @@
+Instruction:
+Edit the Levitation property of the LED Cube to true, allowing it to float.
+
+Code:
+// Declare a private field to track the LED Cube
+private Object3D ledCube;
+
+public void Start()
+{
+    // Find the LED Cube in the scene
+    ledCube = FindObject3DByName("LED Cube");
+
+    // Check if the LED Cube was found
+    if (ledCube == null)
+    {
+        Debug.Log("LED Cube not found in the scene.");
+        return;
+    }
+
+    // Make the LED Cube levitate
+    MakeLedCubeLevitate();
+}
+
+public void MakeLedCubeLevitate()
+{
+    // Check if the LED Cube is already levitating
+    if (ledCube.IsLevitated())
+    {
+        Debug.Log("LED Cube is already levitating.");
+        return;
+    }
+
+    // Set the Levitate property of the LED Cube to true
+    ledCube.Levitate(true);
+
+    Debug.Log("LED Cube is now levitating.");
+}

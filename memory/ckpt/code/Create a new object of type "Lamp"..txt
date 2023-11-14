@@ -1,0 +1,18 @@
+Instruction:
+Create a new object of type "Lamp".
+
+Code:
+// Declare the lamp object
+private Object3D lamp;
+
+public void CreateLamp()
+{
+    // Get the user's feet position
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+
+    // Create the lamp at the user's feet position
+    lamp = CreateObject("UserLamp", "Lamp", userFeetPosition, new Vector3D(0, 0, 0));
+
+    // Log the creation of the lamp
+    Debug.Log("Lamp created at user's feet position");
+}

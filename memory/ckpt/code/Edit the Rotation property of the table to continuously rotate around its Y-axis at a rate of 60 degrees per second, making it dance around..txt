@@ -1,0 +1,37 @@
+Instruction:
+Edit the Rotation property of the table to continuously rotate around its Y-axis at a rate of 60 degrees per second, making it dance around.
+
+Code:
+private Object3D dancingTable;
+
+public void Start()
+{
+    // Find the table in the scene
+    dancingTable = FindObject3DByName("Table");
+
+    // Check if the table was found
+    if (dancingTable == null)
+    {
+        Debug.LogError("Table not found in the scene.");
+        return;
+    }
+}
+
+public void Update()
+{
+    // Check if the table was found
+    if (dancingTable == null)
+    {
+        Debug.LogError("Table not found in the scene.");
+        return;
+    }
+
+    // Get the current rotation of the table
+    Vector3D currentRotation = dancingTable.GetRotation();
+
+    // Calculate the new rotation around the Y-axis
+    float newYRotation = currentRotation.y + 60 * Time.deltaTime;
+
+    // Set the new rotation of the table
+    dancingTable.SetRotation(new Vector3D(currentRotation.x, newYRotation, currentRotation.z));
+}

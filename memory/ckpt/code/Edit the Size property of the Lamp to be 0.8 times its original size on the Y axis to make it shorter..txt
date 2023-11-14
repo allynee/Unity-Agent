@@ -1,0 +1,34 @@
+Instruction:
+Edit the Size property of the Lamp to be 0.8 times its original size on the Y axis to make it shorter.
+
+Code:
+// Declaring the private field for the Lamp object
+private Object3D userLamp;
+
+public void Start()
+{
+    // Call the method to resize the lamp
+    ResizeLamp();
+}
+
+public void ResizeLamp()
+{
+    // Check if the lamp object exists
+    if (userLamp == null)
+    {
+        Debug.LogError("Lamp doesn't exist. Create it first before resizing it.");
+        return;
+    }
+
+    // Get the current size of the lamp
+    Vector3D lampSize = userLamp.GetSize();
+
+    // Calculate the new size for the lamp on the Y axis
+    float newYSize = lampSize.y * 0.8f;
+
+    // Create a new Vector3D for the new size
+    Vector3D newSize = new Vector3D(lampSize.x, newYSize, lampSize.z);
+
+    // Set the new size for the lamp
+    userLamp.SetSize(newSize);
+}

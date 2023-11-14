@@ -7,11 +7,6 @@ private GameObject wallObject;
 private Vector3 wallSize;
 private Vector3 wallCenter;
 
-private void Start()
-{
-    PositionLedCubesInCircle();
-}
-
 public void PositionLedCubesInCircle()
 {
     // Calculate the circle's radius based on the wall's size, smaller of the two dimensions, with a margin
@@ -34,7 +29,7 @@ public void PositionLedCubesInCircle()
                             wallForward * Mathf.Sin(angle) * circleRadius;
 
         // Position the LED cubes in a circle parallel to the wall using the local offset
-        Vector3 cubePosition = wallCenter+ localOffset + wallOffset;
+        Vector3 cubePosition = wallCenter + localOffset + wallOffset;
 
         // Convert to your Vector3D type if needed
         Vector3D cubePosition3D = new Vector3D(cubePosition.x, cubePosition.y, cubePosition.z);

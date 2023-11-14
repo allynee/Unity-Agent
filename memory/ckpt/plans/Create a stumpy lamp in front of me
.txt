@@ -1,0 +1,9 @@
+User query:
+Create a stumpy lamp in front of me
+
+
+Plan:
+1. Create a new object of type "Lamp".
+2. Edit the Position property of the Lamp to be 0.5 meters in front of the user.
+3. Edit the Size property of the Lamp to be 0.8 times its original size on the Y axis to make it shorter.
+4. Edit the Size property of the Lamp to be 2.5 times its original size on the X and Z axis to make it even fatter.

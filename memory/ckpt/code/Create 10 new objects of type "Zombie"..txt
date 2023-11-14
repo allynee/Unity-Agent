@@ -1,0 +1,21 @@
+Instruction:
+Create 10 new objects of type "Zombie".
+
+Code:
+private List<Object3D> zombies = new List<Object3D>();
+
+private void Start(){
+    CreateTenZombies();
+}
+
+public void CreateTenZombies()
+{
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+
+    for (int i = 0; i < 10; i++)
+    {
+        // Create Zombie at a default position
+        Object3D zombie = CreateObject($"UserZombie_{i}", "Zombie", new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
+        zombies.Add(zombie);
+    }
+}

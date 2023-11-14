@@ -76,8 +76,6 @@ private void Update()
 {
     if (foxObject3D!=null){
         RotateFoxToFaceUser();
-    }else{
-        foxObject3D = FindObject3DByName(""Fox"");
     }
 }
 
@@ -108,10 +106,6 @@ private void Update()
 {
     if (navMeshAgent!=null && foxObject3D!=null){
         MoveFoxToUser();
-    }else{
-        foxObject3D = FindObject3DByName(""Fox"");
-        foxGameObject = foxObject3D.ToGameObject();
-        navMeshAgent = foxGameObject.GetComponent<NavMeshAgent>();
     }
 }
 
@@ -223,7 +217,7 @@ public void PositionChairInFrontofUser(){
     // Set the position of the chair
     userChair.SetPosition(spawnPosition);
 }"
-8,Edit levitation,Edit the Levitation property of the Chair to true and edit the Position property of the Chair to 1.5 meters above its current position. ,"private Object3D userChair;
+8,Edit levitation,Edit the Levitation property of the Chair to true so it can defy gravity and float. ,"private Object3D userChair;
 
 private void Start()
 {
@@ -232,15 +226,27 @@ private void Start()
 
 public void MakeChairFloat()
 {
-    if (userChair== null)
+    if (userChair!= null)
     {
-        Vector3D positionToCreateChair = GetUsersFeetPosition(); 
-        userChair = CreateObject(""UserChair"", ""Chair"", positionToCreateChair, new Vector3D(0, 0, 0));
+        userChair.Levitate(true);
     }   
-    // Levitate the chair by a given amount (e.g., 1.5 meters above the ground)
-    userChair.Levitate(true);
-    Vector3D chairPosition = userChair.GetPosition();
-    userChair.SetPosition(new Vector3D(chairPosition.x, chairPosition.y + 1.5f, chairPosition.z));
+}"
+2,Edit position,Edit the Position property of the Chair to 1.5 meters above its current position. ,"private Object3D userChair;
+
+private void Start()
+{
+    LiftChairUp();
+}
+
+public void LiftChairUp()
+{
+    if (userChair!= null)
+    {
+        // Lift the chair by a given amount (e.g., 1.5 meters above the ground)
+        Vector3D chairPosition = userChair.GetPosition();
+        userChair.SetPosition(new Vector3D(chairPosition.x, chairPosition.y + 1.5f, chairPosition.z));
+    }   
+
 }"
 3,Edit rotation,"Edit the Rotation property of the chair to face the user, correcting for an initial right-facing orientation of the chair by rotating it to face the user's head position.","private Object3D userChair;
 
@@ -442,8 +448,8 @@ public void EnlargeLampOnTable()
     Vector3D lampSize = userLamp.GetSize();
     Vector3D lampPosition = userLamp.GetPosition();
 
-    // Store the new ideal size of the lamp (assuming 1.2 times as per instruction)
-    const float idealScale = 1.2f;
+    // Store the new ideal size of the lamp (assuming 2.5 times as per instruction)
+    const float idealScale = 2.5f;
 
     // When enlarging the lamp, we need to consider the environment to ensure the lamp does not exceed the max possible size.
     // First, account for the table that the lamp is on for the max x & z size.
@@ -495,7 +501,7 @@ public void CreateTenLEDCubes()
     for (int i = 0; i < 10; i++)
     {
         // Create LED Cube at a default position
-        Object3D cube = CreateObject($""LEDCube_{i}"", ""LED Cube"",new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
+        Object3D cube = CreateObject($""UserLEDCube_{i}"", ""LED Cube"",new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
         ledCubes.Add(cube); 
     }
 }"

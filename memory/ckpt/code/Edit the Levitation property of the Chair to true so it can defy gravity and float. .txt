@@ -1,0 +1,18 @@
+Instruction:
+Edit the Levitation property of the Chair to true so it can defy gravity and float. 
+
+Code:
+private Object3D userChair;
+
+private void Start()
+{
+    MakeChairFloat();
+}
+
+public void MakeChairFloat()
+{
+    if (userChair!= null)
+    {
+        userChair.Levitate(true);
+    }   
+}

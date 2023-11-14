@@ -1,0 +1,7 @@
+User query:
+Make the table in front of me dance around 
+
+
+Plan:
+1. Find the table in the user's field of view.
+2. Edit the Rotation property of the table to continuously rotate around its Y-axis at a rate of 60 degrees per second, making it dance around.

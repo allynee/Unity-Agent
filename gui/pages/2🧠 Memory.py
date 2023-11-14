@@ -28,14 +28,22 @@ def init_code_memory(uploaded_file):
 	output = memorymanager._init_code_memory(file_path)
 	st.write(output)
 
-def add_code(add):
-	items = add.split(",")
+def add_plan(add):
+	items = add.split("@")
 	info = {
-		"p_name":items[0],
-		"p_code":items[1],
-		"p_category":items[2],
-		"p_compile":items[3],
-		"p_ideal":items[4],
+		"user_query":items[0],
+		"plan":items[1],
+	}
+	st.write(info)
+	memorymanager = A.MemoryManager()
+	output = memorymanager._add_new_plan(info)
+	st.write(output)
+
+def add_code(add):
+	items = add.split("@")
+	info = {
+		"instruction":items[0],
+		"code":items[1],
 	}
 	st.write(info)
 	memorymanager = A.MemoryManager()
@@ -93,6 +101,16 @@ def delete_files_and_folders(files_to_clear, folders_to_clear):
 		except Exception as e:
 			st.error(f"Error: {str(e)}")
 
+def delete_one_plan(user_query):
+	memorymanager = A.MemoryManager()
+	output = memorymanager._delete_one_plan(user_query)
+	st.write(output)
+
+def delete_one_code(instruction):
+	memorymanager = A.MemoryManager()
+	output = memorymanager._delete_one_code(instruction)
+	st.write(output)
+
 st.title("Testing memory agent 🧠")
 
 st.write("1. Initialize memory on planning")
@@ -128,10 +146,18 @@ if st.button("Run", key="getcodebutton"):
 		st.success("Process done!")
 
 st.write("5. Add new plan to memory")
-st.write("Yet to implement")
+new_plan = st.text_area(f"Enter new plan here, with the format task@plan:", key="addplan")
+if st.button("Run", key="addplanbutton"):
+	with st.spinner("Processing"):
+		add_plan(new_plan)
+		st.success("Process done!")
 
 st.write("6. Add new code to memory")
-st.write("Yet to implement")
+new_code = st.text_area(f"Enter new code here, with the format instruction@code:", key="addcode")
+if st.button("Run", key="addcodebutton"):
+	with st.spinner("Processing"):
+		add_code(new_code)
+		st.success("Process done!")
 
 st.write("7. Delete plan memory")
 if st.button("Delete", key="deleteplanbutton"):
@@ -143,4 +169,18 @@ st.write("8. Delete code memory")
 if st.button("Delete", key="deletecodebutton"):
 	with st.spinner("Processing"):
 		delete_code_memory()
+		st.success("Process done!")
+
+st.write("9. Delete one plan")
+user_query = st.text_area(f"Enter user query here:", key="deleteoneplan")
+if st.button("Run", key="deleteoneplanbutton"):
+	with st.spinner("Processing"):
+		delete_one_plan(user_query)
+		st.success("Process done!")
+
+st.write("10. Delete one code")
+instruction = st.text_area(f"Enter instruction here:", key="deleteonecode")
+if st.button("Run", key="deleteonecodebutton"):
+	with st.spinner("Processing"):
+		delete_one_code(instruction)
 		st.success("Process done!")

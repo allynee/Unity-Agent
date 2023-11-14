@@ -29,6 +29,7 @@ class MemoryManager:
                                      persist_directory=f"../memory/{ckpt_dir}")
         print(f"Initializing memory in {settings.persist_directory}...")
         client = chromadb.Client(settings)
+        client.persist()
 
         self.embeddings = OpenAIEmbeddings()
         self.client = client
@@ -82,7 +83,7 @@ class MemoryManager:
     def _get_code(self, instruction):
         instruction_embedding = self.embeddings.embed_query(instruction)
         # Retrieve 2 functions only
-        k = min(self.codedb.count(), 2)
+        k = min(self.codedb.count(), 5)
         if k==0:
             return []
         print(f"Retrieving {k} codes...")
@@ -92,11 +93,11 @@ class MemoryManager:
             #where_document={"$contains":"search_string"}
 			include=["metadatas"]
         )
-        return codes["metadatas"][0] 
+        return codes["metadatas"][0][:2]
 
     def _get_plan(self, user_query):
         user_query_embedding = self.embeddings.embed_query(user_query)
-        k = min(self.plansdb.count(), self.retrieve_top_k)
+        k = min(self.plansdb.count(), 5)
         if k==0:
             return []
         print(f"Retrieving {k} plans...")
@@ -105,7 +106,8 @@ class MemoryManager:
             n_results=k,
             include=["metadatas"]
         )
-        return plans["metadatas"][0]
+        # Just do 2
+        return plans["metadatas"][0][:2]
 
     def _add_new_code(self, info):
         instruction = info["instruction"]
@@ -170,3 +172,11 @@ class MemoryManager:
     def _delete_code_memory(self):
         self.client.delete_collection(name="codedb")
         return "Deleted code memory."
+    
+    def _delete_one_plan(self, user_query):
+        self.plansdb.delete(ids=[user_query])
+        return f"Deleted plan for user query \"{user_query}\""
+    
+    def _delete_one_code(self, instruction):
+        self.codedb.delete(ids=[instruction])
+        return f"Deleted code for instruction \"{instruction}\""

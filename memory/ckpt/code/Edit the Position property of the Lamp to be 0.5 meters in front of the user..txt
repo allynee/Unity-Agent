@@ -1,0 +1,41 @@
+Instruction:
+Edit the Position property of the Lamp to be 0.5 meters in front of the user.
+
+Code:
+// Declare private field for the lamp
+private Object3D userLamp;
+
+public void Start()
+{
+    // Call the method to position the lamp in front of the user
+    PositionLampInFrontOfUser();
+}
+
+public void PositionLampInFrontOfUser()
+{
+    // Check if the lamp object is null
+    if (userLamp == null)
+    {
+        // Get the user's feet position
+        Vector3D positionToCreateLamp = GetUsersFeetPosition();
+        // Create a new lamp object at the user's feet position
+        userLamp = CreateObject("UserLamp", "Lamp", positionToCreateLamp, new Vector3D(0, 0, 0));
+    }
+
+    // Get the user's feet position and orientation
+    Vector3D userFeetPosition = GetUsersFeetPosition();
+    Vector3D userOrientation = GetUserOrientation();
+
+    // Assume a default 0.5m in front
+    float defaultDistance = 0.5f;
+
+    // Calculate the new position for the lamp based on the user's orientation and the default distance
+    Vector3D newPosition = new Vector3D(
+        userFeetPosition.x + userOrientation.x * defaultDistance,
+        userFeetPosition.y,
+        userFeetPosition.z + userOrientation.z * defaultDistance
+    );
+
+    // Set the position of the lamp
+    userLamp.SetPosition(newPosition);
+}

@@ -1,0 +1,22 @@
+Instruction:
+Edit the Color property of the LED Cube to a pink color with RGBA(1, 0, 0.5, 1), giving it a pink hue.
+
+Code:
+// Declare the LED Cube object
+private Object3D ledCube;
+
+public void ChangeLedCubeColorToPink()
+{
+    // Check if the LED Cube object is null
+    if (ledCube == null)
+    {
+        // Get the user's feet position to create the LED Cube
+        Vector3D positionToCreateLedCube = GetUsersFeetPosition(); 
+
+        // Create the LED Cube object
+        ledCube = CreateObject("UserLedCube", "LED Cube", positionToCreateLedCube, new Vector3D(0, 0, 0));
+    }
+
+    // Set the color of the LED Cube to pink
+    ledCube.SetColor(new Color3D(1, 0, 0.5f, 1)); // RGBA for pink color
+}

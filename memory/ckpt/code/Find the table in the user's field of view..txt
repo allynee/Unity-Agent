@@ -1,0 +1,24 @@
+Instruction:
+Find the table in the user's field of view.
+
+Code:
+// Private field to track the table
+private Object3D table;
+
+public void FindTableInFieldOfView()
+{
+    // Get all objects in the user's field of view
+    List<Object3D> objectsInView = GetAllObject3DsInFieldOfView();
+
+    // Find the table in the user's field of view
+    table = objectsInView.Find(obj => obj.GetType().Equals("Table"));
+
+    if (table != null)
+    {
+        Debug.Log("Table found in the user's field of view!");
+    }
+    else
+    {
+        Debug.LogWarning("No table found in the user's field of view.");
+    }
+}

@@ -1,10 +1,10 @@
 # Unity-Agent
 
-This is an individal WIP project for the module IS470 (Guided Research in Computing). 
+This is an individal project for the module IS470 (Guided Research in Computing). 
 
 ### About the project
 
-🤖 Topic: Lightweight Memory Management in Autonomous Code Agents
+🤖 Topic: Enabling Continuous Learning in Generative Code Agents
 
 🎯 Limitations in Conventional Approaches
 - Emulating human coders through computational agents faces substantial challenges due to existing training methodologies.
